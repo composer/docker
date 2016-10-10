@@ -8,7 +8,7 @@ declare -A aliases=(
 self="$(basename "$BASH_SOURCE")"
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
-versions=( "master" "1.2" )
+versions=( "master" "1.1" "1.2" )
 
 # sort version numbers with highest first
 IFS=$'\n'; versions=( $(echo "${versions[*]}" | sort -rV) ); unset IFS
