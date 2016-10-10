@@ -52,7 +52,7 @@ join() {
 for version in "${versions[@]}"; do
 	commit="$(dirCommit "$version")"
 
-	fullVersion="$(git show "$commit":"$version/Dockerfile" | awk '$1 == "ENV" && $2 == "PHP_VERSION" { print $3; exit }')"
+	fullVersion="$(git show "$commit":"$version/Dockerfile" | awk '$1 == "ENV" && $2 == "COMPOSER_VERSION" { print $3; exit }')"
 
 	versionAliases=(
 		$fullVersion
