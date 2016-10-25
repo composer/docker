@@ -1,19 +1,15 @@
-#
-# NOTE: THIS DOCKERFILE IS GENERATED VIA "update.sh"
-#
-# PLEASE DO NOT EDIT IT DIRECTLY.
-#
 FROM php:7-alpine
 
 RUN apk --no-cache add curl git subversion openssh openssl mercurial tini
 
-RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini \
- && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini
+RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
+ && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
 
-ENV COMPOSER_VERSION 1.1.3
-ENV COMPOSER_HOME /composer
-ENV PATH /composer/vendor/bin:$PATH
+ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_HOME /composer
+ENV COMPOSER_VERSION snapshot
+
 RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
  && curl -s -f -L -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
  && php -r " \
@@ -24,13 +20,13 @@ RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
         echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
         exit(1); \
     }" \
- && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
+ && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/bin --filename=composer --snapshot \
  && rm /tmp/composer-setup.php \
  && composer --ansi --version --no-interaction
 
-WORKDIR /app
-
 VOLUME /composer
+
+WORKDIR /app
 
 CMD ["--ansi", "--version"]
 

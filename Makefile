@@ -2,18 +2,16 @@
 
 all: build test
 
-build: build/1.2 build/master
-
-test: test/1.2 test/master
+build: build/1.1.3 build/1.2.1 build/snapshot
+test: test/1.1.3 test/1.2.1 test/snapshot
 
 build/%:
-	docker build -t composer/composer:$* $*
-	docker build -t composer/composer:$*-alpine $*/alpine
-	docker build -t composer/composer:$*-php5 $*/php5
-	docker build -t composer/composer:$*-php5-alpine $*/php5/alpine
+	docker build -t "composer:$*" "$*"
 
 test/%:
-	docker run composer/composer:$* --version --no-ansi
-	docker run composer/composer:$*-alpine --version --no-ansi
-	docker run composer/composer:$*-php5 --version --no-ansi
-	docker run composer/composer:$*-php5-alpine --version --no-ansi
+	docker run "composer:$*"
+
+tpl/%:
+	mkdir "$*"
+	cp Dockerfile.template "$*/Dockerfile"
+	sed -ri 's/%%COMPOSER_VERSION%%/'"$*"'/' "$*/Dockerfile"
