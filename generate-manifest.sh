@@ -1,5 +1,4 @@
-#!/bin/sh
-set -eu
+#!/bin/bash
 
 self="$(basename "$BASH_SOURCE")"
 

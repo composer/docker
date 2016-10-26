@@ -11,14 +11,30 @@ docker pull composer
 Run the `composer` image:
 
 ``` sh
-docker run --rm -it -v $(pwd):/app composer install
+docker run --rm -it \
+    -v $(pwd):/app \
+    composer install
 ```
 
 You can mount the Composer home directory from your host inside the Container
 to share caching and configuration files:
 
 ``` sh
-docker run --rm -it -v $(pwd):/app -v $COMPOSER_HOME:/composer composer install
+docker run --rm -it \
+    -v $(pwd):/app \
+    -v $COMPOSER_HOME:/composer \
+    composer install
+```
+
+By default, Composer runs as root inside the container. This can lead to
+permission issues on your host filesystem. You can run Composer as yourself:
+
+``` sh
+docker run --rm -it \
+    -v $(pwd):/app \
+    -e DOCKER_UID=$UID \
+    -e DOCKER_USER=$USER \
+    composer install
 ```
 
 ## Suggestions
@@ -35,7 +51,9 @@ certain PHP extensions. In this scenario, you have two options:
     `update`:
 
     ``` sh
-    docker run --rm -it -v $(pwd):/app composer install --no-scripts -ignore-platform-reqs
+    docker run --rm -it \
+        -v $(pwd):/app \
+        composer install --no-scripts -ignore-platform-reqs
     ```
 
 * Create your own image (possibly by extending `FROM composer`).
@@ -48,8 +66,17 @@ locally, you can define the following function in your `~/.bashrc`, `~/.zshrc`
 or similar:
 
 ``` sh
-function composer () {
-    docker run --rm -it -v $(pwd):/app composer "$@"
+composer () {
+    tty=
+    tty -s && tty=-t
+    docker run \
+        $tty \
+        -i \
+        --rm \
+        -e DOCKER_UID=$UID \
+        -e DOCKER_USER=$USER \
+        -v $(pwd):/app \
+        composer "$@"
 }
 ```
 
