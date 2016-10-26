@@ -3,8 +3,8 @@ sudo: required
 services:
   - docker
 
-script:
-  - make
+before_script:
+  - make build
 
-notifications:
-  email: false
+script:
+  - make test
