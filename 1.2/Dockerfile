@@ -1,30 +1,15 @@
-#
-# NOTE: THIS DOCKERFILE IS GENERATED VIA "update.sh"
-#
-# PLEASE DO NOT EDIT IT DIRECTLY.
-#
-FROM php:7-cli
+FROM php:7-alpine
 
-RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y curl git subversion openssh-client openssl mercurial \
- && rm -r /var/lib/apt/lists/*
+RUN apk --no-cache add curl git subversion openssh openssl mercurial tini su-exec bash
 
-ENV TINI_VERSION v0.10.0
-RUN curl -s -f -L -o /sbin/tini https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini \
- && curl -s -f -L -o /sbin/tini.asc https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc \
- && export GNUPGHOME="$(mktemp -d)" \
- && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
- && gpg --batch --verify /sbin/tini.asc /sbin/tini \
- && rm -r "$GNUPGHOME" /sbin/tini.asc \
- && chmod +x /sbin/tini
+RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
+ && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
 
-RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini \
- && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini
-
-ENV COMPOSER_VERSION 1.2.1
-ENV COMPOSER_HOME /composer
-ENV PATH /composer/vendor/bin:$PATH
+ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_HOME /composer
+ENV COMPOSER_VERSION 1.2.1
+
 RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
  && curl -s -f -L -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
  && php -r " \
@@ -39,10 +24,14 @@ RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
  && rm /tmp/composer-setup.php \
  && composer --ansi --version --no-interaction
 
-WORKDIR /app
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+RUN chmod +x /docker-entrypoint.sh
 
 VOLUME /composer
 
+WORKDIR /app
+
 CMD ["--ansi", "--version"]
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/composer"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

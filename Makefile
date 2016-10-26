@@ -2,18 +2,14 @@
 
 all: build test
 
-build: build/1.2 build/master
+build: build/1.1 build/1.2
+	docker build -t composer:1 1.2
+	docker build -t composer:latest 1.2
 
-test: test/1.2 test/master
+test: test/1.1 test/1.2
 
 build/%:
-	docker build -t composer/composer:$* $*
-	docker build -t composer/composer:$*-alpine $*/alpine
-	docker build -t composer/composer:$*-php5 $*/php5
-	docker build -t composer/composer:$*-php5-alpine $*/php5/alpine
+	docker build -t "composer:$*" "$*"
 
 test/%:
-	docker run composer/composer:$* --version --no-ansi
-	docker run composer/composer:$*-alpine --version --no-ansi
-	docker run composer/composer:$*-php5 --version --no-ansi
-	docker run composer/composer:$*-php5-alpine --version --no-ansi
+	docker run "composer:$*"
