@@ -49,13 +49,10 @@ declare -A aliases=(
 
 # manifest header
 cat <<-EOH
-#
 # this file was generated using https://github.com/composer/docker/blob/$(fileCommit "$self")/$self
-#
 
-Maintainers: Composer <@composer>, Rob Bast <@alcohol>
+Maintainers: Composer (@composer), Rob Bast (@alcohol)
 GitRepo: https://github.com/composer/docker.git
-
 EOH
 
 # image metadata for each directory found
@@ -65,9 +62,9 @@ for directory in "${directories[@]}"; do
     tags=($version $directory ${aliases[$directory]:-})
 
     cat <<-EOE
+
 		Tags: $(join ', ' "${tags[@]}")
 		GitCommit: $commit
 		Directory: $directory
-
 	EOE
 done
