@@ -8,7 +8,7 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
 ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer
-ENV COMPOSER_VERSION 1.2.1
+ENV COMPOSER_VERSION 1.2.2
 
 RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
  && curl -s -f -L -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
