@@ -80,4 +80,9 @@ composer () {
 }
 ```
 
+## Resources
+
+* Composer on [Docker Hub][composer_docker_hub]
+
 [composer scripts]: https://getcomposer.org/doc/articles/scripts.md
+[composer_docker_hub]: https://hub.docker.com/r/composer/composer/
