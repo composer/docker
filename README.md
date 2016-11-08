@@ -72,8 +72,7 @@ composer () {
         $tty \
         -i \
         --rm \
-        -e DOCKER_UID=$UID \
-        -e DOCKER_USER=$USER \
+        --user $(id -u):$(id -g) \
         -v $(pwd):/app \
         composer "$@"
 }
