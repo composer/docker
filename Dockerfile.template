@@ -1,6 +1,6 @@
 FROM php:7-alpine
 
-RUN apk --no-cache add curl git subversion openssh openssl mercurial tini su-exec bash
+RUN apk --no-cache add curl git subversion openssh openssl mercurial tini bash
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
  && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
@@ -25,8 +25,6 @@ RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
  && composer --ansi --version --no-interaction
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-
-RUN chmod +x /docker-entrypoint.sh
 
 VOLUME /composer
 
