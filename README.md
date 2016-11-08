@@ -32,8 +32,7 @@ permission issues on your host filesystem. You can run Composer as yourself:
 ``` sh
 docker run --rm -it \
     -v $(pwd):/app \
-    -e DOCKER_UID=$UID \
-    -e DOCKER_USER=$USER \
+    --user $(id -u):$(id -g) \
     composer install
 ```
 
