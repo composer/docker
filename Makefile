@@ -13,3 +13,4 @@ build/%:
 
 test/%:
 	docker run "composer:$*"
+	docker run "composer:$*" /bin/bash --version
