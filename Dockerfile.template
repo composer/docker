@@ -8,20 +8,19 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
 ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer
-ENV COMPOSER_VERSION %%COMPOSER_VERSION%%
+ENV COMPOSER_VERSION %COMPOSER_VERSION%
 
-RUN curl -s -f -L -o /tmp/composer-setup.php https://getcomposer.org/installer \
- && curl -s -f -L -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
+RUN curl -s -f -L -o %COMPOSER_INSTALLER_URL% \
  && php -r " \
-    \$hash = hash('SHA384', file_get_contents('/tmp/composer-setup.php')); \
-    \$signature = trim(file_get_contents('/tmp/composer-setup.sig')); \
+    \$signature = '%COMPOSER_INSTALLER_HASH%'; \
+    \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
     if (!hash_equals(\$signature, \$hash)) { \
-        unlink('/tmp/composer-setup.php'); \
+        unlink('/tmp/installer.php'); \
         echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
         exit(1); \
     }" \
- && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
- && rm /tmp/composer-setup.php \
+ && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
+ && rm /tmp/installer.php \
  && composer --ansi --version --no-interaction
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
