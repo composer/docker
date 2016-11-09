@@ -52,7 +52,7 @@ certain PHP extensions. In this scenario, you have two options:
     ``` sh
     docker run --rm -it \
         -v $(pwd):/app \
-        composer install --no-scripts -ignore-platform-reqs
+        composer install --ignore-platform-reqs --no-scripts
     ```
 
 * Create your own image (possibly by extending `FROM composer`).
