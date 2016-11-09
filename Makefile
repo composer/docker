@@ -24,7 +24,7 @@ test:
 	docker run composer:latest /bin/bash --version
 
 template:
-	sed -e 's@%COMPOSER_VERSION%@$(value COMPOSER_VERSION)@' \
-		-e 's@%COMPOSER_INSTALLER_URL%@$(value COMPOSER_INSTALLER_URL)@' \
-		-e 's@%COMPOSER_INSTALLER_HASH%@$(value COMPOSER_INSTALLER_HASH)@' \
-		Dockerfile.template
+	@sed -e 's@%COMPOSER_VERSION%@$(value COMPOSER_VERSION)@' \
+	    -e 's@%COMPOSER_INSTALLER_URL%@$(value COMPOSER_INSTALLER_URL)@' \
+	    -e 's@%COMPOSER_INSTALLER_HASH%@$(value COMPOSER_INSTALLER_HASH)@' \
+	    Dockerfile.template
