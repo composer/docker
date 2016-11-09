@@ -1,4 +1,4 @@
-.PHONY = all build test
+.PHONY = all build test template
 COMPOSER_VERSION ?= 1.2.2
 COMPOSER_INSTALLER_URL ?= https://raw.githubusercontent.com/composer/getcomposer.org/9184c4b85ed6ada94a298cf54e55cc252c970c28/web/installer
 COMPOSER_INSTALLER_HASH ?= aa96f26c2b67226a324c27919f1eb05f21c248b987e6195cad9690d5c1ff713d53020a02ac8c217dbf90a7eacc9d141d
