@@ -10,18 +10,19 @@ build:
 	docker build -t composer:1 -t composer:1.2 -t composer:1.2.2 -t composer:latest 1.2
 
 test:
-	docker run composer:1
-	docker run composer:1 /bin/bash --version
-	docker run composer:1.1
-	docker run composer:1.1 /bin/bash --version
-	docker run composer:1.1.3
-	docker run composer:1.1.3 /bin/bash --version
-	docker run composer:1.2
-	docker run composer:1.2 /bin/bash --version
-	docker run composer:1.2.2
-	docker run composer:1.2.2 /bin/bash --version
-	docker run composer:latest
-	docker run composer:latest /bin/bash --version
+	docker run -t composer:1.1.3
+	docker run -t composer:1.1.3 /bin/bash --version
+	docker run -t composer:1.2.2
+	docker run -t composer:1.2.2 /bin/bash --version
+	docker run -t composer:1.1
+	docker run -t composer:1.1 /bin/bash --version
+	docker run -t composer:1.2
+	docker run -t composer:1.2 /bin/bash --version
+	docker run -t composer:1
+	docker run -t composer:1 composer --version
+	docker run -t composer:1 /bin/bash --version
+	docker run -t composer:latest
+	docker run -t composer:latest /bin/bash --version
 
 template:
 	@sed -e 's@%COMPOSER_VERSION%@$(value COMPOSER_VERSION)@' \

@@ -29,6 +29,6 @@ VOLUME /composer
 
 WORKDIR /app
 
-CMD ["--ansi", "--version"]
-
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["composer"]
