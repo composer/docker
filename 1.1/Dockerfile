@@ -25,8 +25,6 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-VOLUME /composer
-
 WORKDIR /app
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
