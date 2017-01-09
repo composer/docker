@@ -1,7 +1,7 @@
 .PHONY = all build test template
-COMPOSER_VERSION ?= 1.3.0
-COMPOSER_INSTALLER_URL ?= https://raw.githubusercontent.com/composer/getcomposer.org/0346c9ed3d429536fcc9d722159c10dcd247bcc2/web/installer
-COMPOSER_INSTALLER_HASH ?= 61069fe8c6436a4468d0371454cf38a812e451a14ab1691543f25a9627b97ff96d8753d92a00654c21e2212a5ae1ff36
+COMPOSER_VERSION ?= 1.3.1
+COMPOSER_INSTALLER_URL ?= https://raw.githubusercontent.com/composer/getcomposer.org/2091762d2ebef14c02301f3039c41d08468fb49e/web/installer
+COMPOSER_INSTALLER_HASH ?= 55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30
 
 all: build test
 
