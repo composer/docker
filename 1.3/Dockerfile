@@ -49,5 +49,3 @@ COPY docker-entrypoint.sh /docker-entrypoint.sh
 WORKDIR $APP_DIR
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
-CMD ["composer"]
