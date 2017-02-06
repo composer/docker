@@ -1,6 +1,6 @@
 FROM php:7-alpine
 
-RUN apk --no-cache add curl git subversion openssh openssl mercurial tini bash
+RUN apk --no-cache add su-exec curl git subversion openssh openssl mercurial tini bash
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
  && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
@@ -9,6 +9,9 @@ ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer
 ENV COMPOSER_VERSION 1.3.2
+ENV TMP_USER=dockerdev
+ENV TMP_UID=1234
+ENV APP_DIR=/app
 
 RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/5fd32f776359b8714e2647ab4cd8a7bed5f3714d/web/installer \
  && php -r " \
@@ -22,11 +25,10 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
  && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
  && rm /tmp/installer.php \
  && composer --ansi --version --no-interaction
+RUN adduser -h $APP_DIR -u $TMP_UID -D $TMP_USER
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-WORKDIR /app
+WORKDIR $APP_DIR
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
-CMD ["composer"]
