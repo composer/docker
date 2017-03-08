@@ -1,14 +1,14 @@
 .PHONY = all build test template
-COMPOSER_VERSION ?= 1.3.2
-COMPOSER_INSTALLER_URL ?= https://raw.githubusercontent.com/composer/getcomposer.org/5fd32f776359b8714e2647ab4cd8a7bed5f3714d/web/installer
-COMPOSER_INSTALLER_HASH ?= 55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30
+COMPOSER_VERSION ?= 1.3.3
+COMPOSER_INSTALLER_URL ?= https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer
+COMPOSER_INSTALLER_HASH ?= 669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410
 
 all: build test
 
 build:
 	docker build -t composer:1.1 -t composer:1.1.3 1.1
 	docker build -t composer:1.2 -t composer:1.2.4 1.2
-	docker build -t composer:1.3 -t composer:1.3.2 -t composer:1 -t composer:latest 1.3
+	docker build -t composer:1.3 -t composer:1.3.3 -t composer:1 -t composer:latest 1.3
 
 test:
 	docker run -t composer:1.1.3
@@ -17,6 +17,8 @@ test:
 	docker run -t composer:1.2.4 /bin/bash --version
 	docker run -t composer:1.3.2
 	docker run -t composer:1.3.2 /bin/bash --version
+	docker run -t composer:1.3.3
+	docker run -t composer:1.3.3 /bin/bash --version
 	docker run -t composer:1.1
 	docker run -t composer:1.1 /bin/bash --version
 	docker run -t composer:1.2
