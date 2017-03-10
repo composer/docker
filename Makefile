@@ -20,14 +20,10 @@ test:
 	docker run -t composer:1.4 /bin/bash --version
 	docker run -t composer:1.4.1 --no-ansi | grep 'Composer version 1.4.1'
 	docker run -t composer:1.4.1 /bin/bash --version
-	docker run -t composer:1.4.0 --no-ansi | grep 'Composer version 1.4.0'
-	docker run -t composer:1.4.0 /bin/bash --version
 	docker run -t composer:1.3 --no-ansi | grep 'Composer version 1.3.3'
 	docker run -t composer:1.3 /bin/bash --version
 	docker run -t composer:1.3.3 --no-ansi | grep 'Composer version 1.3.3'
 	docker run -t composer:1.3.3 /bin/bash --version
-	docker run -t composer:1.3.2 --no-ansi | grep 'Composer version 1.3.2'
-	docker run -t composer:1.3.2 /bin/bash --version
 	docker run -t composer:1.2 --no-ansi | grep 'Composer version 1.2.4'
 	docker run -t composer:1.2 /bin/bash --version
 	docker run -t composer:1.2.4 --no-ansi | grep 'Composer version 1.2.4'
