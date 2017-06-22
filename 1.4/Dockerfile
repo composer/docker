@@ -1,4 +1,4 @@
-FROM php:7-alpine
+FROM php:7.1-alpine
 
 RUN apk --no-cache add curl git subversion openssh openssl mercurial tini bash
 
