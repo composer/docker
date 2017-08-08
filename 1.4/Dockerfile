@@ -1,14 +1,15 @@
 FROM php:7-alpine
 
-RUN apk --no-cache add curl git subversion openssh openssl mercurial tini bash
+RUN apk --no-cache add curl git subversion openssh openssl mercurial tini bash zlib-dev
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
  && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
 
-ENV PATH "/composer/vendor/bin:$PATH"
+RUN docker-php-ext-install zip
+
 ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /composer
-ENV COMPOSER_VERSION 1.4.2
+ENV COMPOSER_HOME /tmp
+ENV COMPOSER_VERSION 1.4.3
 
 RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer \
  && php -r " \
