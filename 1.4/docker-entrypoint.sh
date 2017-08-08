@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 isCommand() {
   for cmd in \

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 self="$(basename "$BASH_SOURCE")"
 
