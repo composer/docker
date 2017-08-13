@@ -21,8 +21,8 @@ RUN curl -s -f -L -o /tmp/installer.php %COMPOSER_INSTALLER_URL% \
         exit(1); \
     }" \
  && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
- && rm -rf /tmp/* \
- && composer --ansi --version --no-interaction
+ && composer --ansi --version --no-interaction \
+ && rm -rf /tmp/*
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 

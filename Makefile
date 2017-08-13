@@ -8,9 +8,6 @@ all: build test
 build:
 	docker build -t composer:1.5 -t composer:1.5.1 -t composer:1 -t composer:latest 1.5
 	docker build -t composer:1.4 -t composer:1.4.3 1.4
-	docker build -t composer:1.3 -t composer:1.3.3 1.3
-	docker build -t composer:1.2 -t composer:1.2.4 1.2
-	docker build -t composer:1.1 -t composer:1.1.3 1.1
 
 test:
 	docker run -t composer:latest --no-ansi | grep 'Composer version 1.5.1'
@@ -25,18 +22,6 @@ test:
 	docker run -t composer:1.4 /bin/bash --version
 	docker run -t composer:1.4.3 --no-ansi | grep 'Composer version 1.4.3'
 	docker run -t composer:1.4.3 /bin/bash --version
-	docker run -t composer:1.3 --no-ansi | grep 'Composer version 1.3.3'
-	docker run -t composer:1.3 /bin/bash --version
-	docker run -t composer:1.3.3 --no-ansi | grep 'Composer version 1.3.3'
-	docker run -t composer:1.3.3 /bin/bash --version
-	docker run -t composer:1.2 --no-ansi | grep 'Composer version 1.2.4'
-	docker run -t composer:1.2 /bin/bash --version
-	docker run -t composer:1.2.4 --no-ansi | grep 'Composer version 1.2.4'
-	docker run -t composer:1.2.4 /bin/bash --version
-	docker run -t composer:1.1 --no-ansi | grep 'Composer version 1.1.3'
-	docker run -t composer:1.1 /bin/bash --version
-	docker run -t composer:1.1.3 --no-ansi | grep 'Composer version 1.1.3'
-	docker run -t composer:1.1.3 /bin/bash --version
 
 template:
 	@sed -e 's@%COMPOSER_VERSION%@$(value COMPOSER_VERSION)@' \
