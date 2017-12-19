@@ -9,7 +9,7 @@ RUN docker-php-ext-install zip
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.5.5
+ENV COMPOSER_VERSION 1.5.6
 
 RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/b107d959a5924af895807021fcef4ffec5a76aa9/web/installer \
  && php -r " \
