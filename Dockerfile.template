@@ -20,7 +20,7 @@ RUN curl -s -f -L -o /tmp/installer.php %COMPOSER_INSTALLER_URL% \
         echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
         exit(1); \
     }" \
- && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
+ && php /tmp/installer.php --no-ansi --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} \
  && composer --ansi --version --no-interaction \
  && rm -rf /tmp/* /tmp/.htaccess
 
