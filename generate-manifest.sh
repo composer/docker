@@ -30,6 +30,22 @@ extractVersion() {
 	git show "$1":"$2/Dockerfile" | awk '$1 == "ENV" && $2 == "COMPOSER_VERSION" { print $3; exit }'
 }
 
+getArches() {
+	local repo="$1"; shift
+	local officialImagesUrl='https://github.com/docker-library/official-images/raw/master/library/'
+
+	eval "declare -g -A parentRepoToArches=( $(
+		find -name 'Dockerfile' -exec awk '
+				toupper($1) == "FROM" && $2 !~ /^('"$repo"'|scratch|microsoft\/[^:]+)(:|$)/ {
+					print "'"$officialImagesUrl"'" $2
+				}
+			' '{}' + \
+			| sort -u \
+			| xargs bashbrew cat --format '[{{ .RepoName }}:{{ .TagName }}]="{{ join " " .TagEntry.Architectures }}"'
+	) )"
+}
+getArches 'composer'
+
 # prints "$2$1$3$1...$N"
 join() {
 	local sep="$1"; shift
@@ -61,9 +77,13 @@ for directory in "${directories[@]}"; do
 	version="$(extractVersion "$commit" "$directory")"
 	tags=($version $directory ${aliases[$directory]:-})
 
+	variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$directory/Dockerfile")"
+	variantArches="${parentRepoToArches[$variantParent]}"
+
 	cat <<-EOE
 
 		Tags: $(join ', ' "${tags[@]}")
+		Architectures: $(join ', ' $variantArches)
 		GitCommit: $commit
 		Directory: $directory
 	EOE
