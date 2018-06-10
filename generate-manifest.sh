@@ -27,7 +27,7 @@ dirCommit() {
 
 # determine actual composer version based on COMPOSER_VERSION value
 extractVersion() {
-    git show "$1":"$2/Dockerfile" | awk '$1 == "ENV" && $2 == "COMPOSER_VERSION" { print $3; exit }'
+	git show "$1":"$2/Dockerfile" | awk '$1 == "ENV" && $2 == "COMPOSER_VERSION" { print $3; exit }'
 }
 
 # prints "$2$1$3$1...$N"
@@ -57,11 +57,11 @@ EOH
 
 # image metadata for each directory found
 for directory in "${directories[@]}"; do
-    commit="$(dirCommit "$directory")"
-    version="$(extractVersion "$commit" "$directory")"
-    tags=($version $directory ${aliases[$directory]:-})
+	commit="$(dirCommit "$directory")"
+	version="$(extractVersion "$commit" "$directory")"
+	tags=($version $directory ${aliases[$directory]:-})
 
-    cat <<-EOE
+	cat <<-EOE
 
 		Tags: $(join ', ' "${tags[@]}")
 		GitCommit: $commit
