@@ -20,7 +20,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
 ENV COMPOSER_VERSION %COMPOSER_VERSION%
 
-RUN curl -s -f -L -o /tmp/installer.php %COMPOSER_INSTALLER_URL% \
+RUN curl --silent --fail --location --retry 3 --output /tmp/installer.php --url %COMPOSER_INSTALLER_URL% \
  && php -r " \
     \$signature = '%COMPOSER_INSTALLER_HASH%'; \
     \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
