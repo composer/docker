@@ -64,6 +64,7 @@ for directory in "${directories[@]}"; do
 	cat <<-EOE
 
 		Tags: $(join ', ' "${tags[@]}")
+		Architectures: amd64, arm32v6, arm64v8, i386, ppc64le
 		GitCommit: $commit
 		Directory: $directory
 	EOE
