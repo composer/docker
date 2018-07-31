@@ -31,7 +31,8 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
     }" \
  && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
  && composer --ansi --version --no-interaction \
- && rm -rf /tmp/* /tmp/.htaccess
+ && rm -rf /tmp/* /tmp/.htaccess \
+ && mkdir -p -m 777 /tmp/cache
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
