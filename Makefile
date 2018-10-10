@@ -9,14 +9,12 @@ all: build test
 build:
 	docker build -t composer:1.7 -t composer:1.7.2 -t composer:1 -t composer:latest 1.7
 	docker build -t composer:1.6 -t composer:1.6.5 1.6
-	docker build -t composer:1.5 -t composer:1.5.6 1.5
 
 test:
 	docker run -t composer:latest --no-ansi | grep 'Composer version 1.7.2'
 	docker run -t composer:1 --no-ansi | grep 'Composer version 1.7.2'
 	docker run -t composer:1.7 --no-ansi | grep 'Composer version 1.7.2'
 	docker run -t composer:1.6 --no-ansi | grep 'Composer version 1.6.5'
-	docker run -t composer:1.5 --no-ansi | grep 'Composer version 1.5.6'
 
 template:
 	@sed -e 's@%COMPOSER_VERSION%@$(value COMPOSER_VERSION)@' \
