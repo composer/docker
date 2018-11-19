@@ -1,6 +1,6 @@
 FROM php:7-alpine3.8
 
-RUN apk --no-cache add git subversion openssh mercurial tini bash patch
+RUN apk --no-cache add git subversion openssh mercurial tini bash patch zip unzip
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
  && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
