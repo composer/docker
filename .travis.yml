@@ -1,3 +1,5 @@
+language: minimal
+
 dist: trusty
 
 services:
