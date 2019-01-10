@@ -32,7 +32,7 @@ RUN curl --silent --fail --location --retry 3 --output /tmp/installer.php --url 
     }" \
  && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
  && composer --ansi --version --no-interaction \
- && rm -rf /tmp/* /tmp/.htaccess
+ && rm -f /tmp/installer.php
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
