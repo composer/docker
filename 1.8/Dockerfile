@@ -7,7 +7,8 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
 
 RUN apk add --no-cache --virtual .build-deps zlib-dev libzip-dev \
  && docker-php-ext-configure zip --with-libzip \
- && docker-php-ext-install zip \
+ && docker-php-ext-configure bcmath --enable-bcmath \
+ && docker-php-ext-install zip bcmath \
  && runDeps="$( \
     scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
     | tr ',' '\n' \
