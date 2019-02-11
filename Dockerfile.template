@@ -24,7 +24,7 @@ ENV COMPOSER_VERSION %COMPOSER_VERSION%
 RUN curl --silent --fail --location --retry 3 --output /tmp/installer.php --url %COMPOSER_INSTALLER_URL% \
  && php -r " \
     \$signature = '%COMPOSER_INSTALLER_HASH%'; \
-    \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
+    \$hash = hash('sha384', file_get_contents('/tmp/installer.php')); \
     if (!hash_equals(\$signature, \$hash)) { \
         unlink('/tmp/installer.php'); \
         echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
