@@ -16,10 +16,10 @@ build:
 	docker build --tag composer:$(PREVIOUS_BRANCH) --tag composer:$(PREVIOUS_VERSION) $(PREVIOUS_BRANCH)
 
 test:
-	docker run --rm --tag composer:latest --no-ansi | grep 'Composer version $(CURRENT_VERSION)'
-	docker run --rm --tag composer:1 --no-ansi | grep 'Composer version $(CURRENT_VERSION)'
-	docker run --rm --tag composer:$(CURRENT_BRANCH) --no-ansi | grep 'Composer version $(CURRENT_VERSION)'
-	docker run --rm --tag composer:$(PREVIOUS_BRANCH) --no-ansi | grep 'Composer version $(PREVIOUS_VERSION)'
+	docker run --rm --tty composer:latest --no-ansi | grep 'Composer version $(CURRENT_VERSION)'
+	docker run --rm --tty composer:1 --no-ansi | grep 'Composer version $(CURRENT_VERSION)'
+	docker run --rm --tty composer:$(CURRENT_BRANCH) --no-ansi | grep 'Composer version $(CURRENT_VERSION)'
+	docker run --rm --tty composer:$(PREVIOUS_BRANCH) --no-ansi | grep 'Composer version $(PREVIOUS_VERSION)'
 
 template:
 	@sed --env 's@%COMPOSER_VERSION%@$(COMPOSER_VERSION)@' \
