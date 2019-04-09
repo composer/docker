@@ -1,6 +1,6 @@
 FROM php:7-alpine
 
-RUN apk add --no-cache --virtual .composer-rundeps git subversion openssh mercurial tini bash patch make zip unzip coreutils \
+RUN apk add --upgrade --no-cache --virtual .composer-rundeps git subversion openssh mercurial tini bash patch make zip unzip coreutils \
  && apk add --no-cache --virtual .build-deps zlib-dev libzip-dev \
  && docker-php-ext-configure zip --with-libzip \
  && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) zip opcache \
@@ -20,7 +20,7 @@ opcache.enable_cli=1\n\
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.8.4
+ENV COMPOSER_VERSION 1.8.5
 
 RUN curl --silent --fail --location --retry 3 --output /tmp/installer.php --url https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer \
  && php -r " \
