@@ -1,6 +1,6 @@
 FROM php:7-alpine
 
-RUN apk add --no-cache --virtual .composer-rundeps git subversion openssh mercurial tini bash patch make zip unzip coreutils \
+RUN apk add --no-cache --virtual .composer-rundeps git subversion openssh-client mercurial tini bash patch make zip unzip coreutils \
  && apk add --no-cache --virtual .build-deps zlib-dev libzip-dev \
  && docker-php-ext-configure zip --with-libzip \
  && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) zip opcache \
