@@ -60,7 +60,9 @@ directories=( "${directories[@]%/}" )
 IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
 
 declare -A aliases=(
-	[1.8]='1 latest'
+	["1.8/7.0"]='1.8 1 latest'
+	["1.7/7.3"]='1.7-7.3'
+	["1.7/7.0"]='1.7'
 )
 
 # manifest header
@@ -75,7 +77,7 @@ EOH
 for directory in "${directories[@]}"; do
 	commit="$(dirCommit "$directory")"
 	version="$(extractVersion "$commit" "$directory")"
-	tags=($version ${directory//\//\-} ${aliases[$directory]:-})
+	tags=(${directory//\//\-} ${aliases[$directory]:-})
 	variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$directory/Dockerfile")"
 	variantArches="${parentRepoToArches[$variantParent]}"
 
