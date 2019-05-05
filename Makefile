@@ -13,16 +13,19 @@ all: build test
 
 build:
     ifeq (${LATEST}, 1)
-	docker build -t composer:$(BRANCH) -t composer:latest -t composer:$(VERSION) $(BRANCH)/$(VARIANT)
+	docker build -t composer:$(BRANCH) -t composer:latest -t composer:1 -t composer:$(VERSION) -t composer:$(BRANCH)-$(VARIANT) $(BRANCH)/$(VARIANT)
 else
-	docker build -t composer:$(BRANCH) -t composer:$(VERSION) $(BRANCH)/$(VARIANT)
+	docker build -t composer:$(BRANCH) -t composer:$(VERSION) -t composer:$(BRANCH)-$(VARIANT) $(BRANCH)/$(VARIANT)
 endif
 test:
     ifeq (${LATEST}, 1)
 	docker run --rm --tty composer:latest --no-ansi | grep 'Composer version $(VERSION)'
+	docker run --rm --tty composer:1 --no-ansi | grep 'Composer version $(VERSION)'
 	docker run --rm --tty composer:$(BRANCH) --no-ansi | grep 'Composer version $(VERSION)'
+	docker run --rm --tty composer:$(BRANCH)-$(VARIANT) --no-ansi | grep 'Composer version $(VERSION)'
 else
 	docker run --rm --tty composer:$(BRANCH) --no-ansi | grep 'Composer version $(VERSION)'
+	docker run --rm --tty composer:$(BRANCH)-$(VARIANT) --no-ansi | grep 'Composer version $(VERSION)'
 endif
 
 template:
