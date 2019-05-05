@@ -20,10 +20,10 @@ endif
 test:
     ifeq (${LATEST}, 1)
 	docker run --rm --tty composer:latest --no-ansi | grep 'Composer version $(VERSION)'
+	docker run --rm --tty composer:$(BRANCH) --no-ansi | grep 'Composer version $(VERSION)'
 else
-	$(info   not latest)
+	docker run --rm --tty composer:$(BRANCH) --no-ansi | grep 'Composer version $(VERSION)'
 endif
-    docker run --rm --tty composer:$(BRANCH) --no-ansi | grep 'Composer version $(VERSION)'
 
 template:
 	@sed --env 's@%COMPOSER_VERSION%@$(COMPOSER_VERSION)@' \
