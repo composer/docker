@@ -1,4 +1,4 @@
-FROM php:7-alpine
+FROM php:7.0-alpine
 
 RUN apk add --no-cache --virtual .composer-rundeps git subversion openssh-client mercurial tini bash patch make zip unzip coreutils \
  && apk add --no-cache --virtual .build-deps zlib-dev libzip-dev \

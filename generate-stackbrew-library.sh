@@ -53,7 +53,7 @@ join() {
 	echo "${out#$sep}"
 }
 
-directories=( */ )
+directories=( */*/ )
 directories=( "${directories[@]%/}" )
 
 # sort directories descending
@@ -75,7 +75,7 @@ EOH
 for directory in "${directories[@]}"; do
 	commit="$(dirCommit "$directory")"
 	version="$(extractVersion "$commit" "$directory")"
-	tags=($version $directory ${aliases[$directory]:-})
+	tags=($version ${directory//\//\-} ${aliases[$directory]:-})
 	variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$directory/Dockerfile")"
 	variantArches="${parentRepoToArches[$variantParent]}"
 
