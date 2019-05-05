@@ -16,7 +16,6 @@ services:
   - docker
 
 before_script:
-  - env | sort
   - make build BRANCH=$BRANCH VERSION=$VERSION VARIANT=$VARIANT LATEST=$LATEST
 
 script:
