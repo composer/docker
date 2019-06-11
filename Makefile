@@ -22,7 +22,7 @@ test:
 	docker run --rm --tty composer:$(PREVIOUS_BRANCH) --no-ansi | grep 'Composer version $(PREVIOUS_VERSION)'
 
 template:
-	@sed --env 's@%COMPOSER_VERSION%@$(COMPOSER_VERSION)@' \
-	    --env 's@%COMPOSER_INSTALLER_URL%@$(COMPOSER_INSTALLER_URL)@' \
-	    --env 's@%COMPOSER_INSTALLER_HASH%@$(COMPOSER_INSTALLER_HASH)@' \
+	@sed --expression 's@%COMPOSER_VERSION%@$(COMPOSER_VERSION)@' \
+	    --expression 's@%COMPOSER_INSTALLER_URL%@$(COMPOSER_INSTALLER_URL)@' \
+	    --expression 's@%COMPOSER_INSTALLER_HASH%@$(COMPOSER_INSTALLER_HASH)@' \
 	    Dockerfile.template
