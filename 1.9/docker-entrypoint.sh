@@ -5,6 +5,7 @@ isCommand() {
     "about" \
     "archive" \
     "browse" \
+    "check-platform-reqs" \
     "clear-cache" \
     "clearcache" \
     "config" \
@@ -34,6 +35,7 @@ isCommand() {
     "status" \
     "suggests" \
     "update" \
+    "upgrade" \
     "validate" \
     "why" \
     "why-not"
