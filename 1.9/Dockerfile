@@ -20,7 +20,6 @@ RUN set -eux; \
     zlib-dev \
   ; \
   docker-php-ext-install -j "$(nproc)" \
-    opcache \
     zip \
   ; \
   runDeps="$( \
@@ -35,7 +34,6 @@ RUN set -eux; \
 RUN printf "# composer php cli ini settings\n\
 date.timezone=UTC\n\
 memory_limit=-1\n\
-opcache.enable_cli=1\n\
 " > $PHP_INI_DIR/php-cli.ini
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
