@@ -1,51 +1,7 @@
 #!/usr/bin/env bash
 
 isCommand() {
-  for cmd in \
-    "about" \
-    "archive" \
-    "browse" \
-    "check-platform-reqs" \
-    "clear-cache" \
-    "clearcache" \
-    "config" \
-    "create-project" \
-    "depends" \
-    "diagnose" \
-    "dump-autoload" \
-    "dumpautoload" \
-    "exec" \
-    "global" \
-    "help" \
-    "home" \
-    "info" \
-    "init" \
-    "install" \
-    "licenses" \
-    "list" \
-    "outdated" \
-    "prohibits" \
-    "remove" \
-    "require" \
-    "run-script" \
-    "search" \
-    "self-update" \
-    "selfupdate" \
-    "show" \
-    "status" \
-    "suggests" \
-    "update" \
-    "upgrade" \
-    "validate" \
-    "why" \
-    "why-not"
-  do
-    if [ -z "${cmd#"$1"}" ]; then
-      return 0
-    fi
-  done
-
-  return 1
+    return composer help $1 > dev/null
 }
 
 # check if the first argument passed in looks like a flag
