@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 isCommand() {
-    return composer help $1 > dev/null
+    return composer help $1 > /dev/null 2>&1 
 }
 
 # check if the first argument passed in looks like a flag
