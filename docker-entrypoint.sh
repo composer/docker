@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 isCommand() {
-    return composer help $1 > /dev/null 2>&1
+  composer help $1 > /dev/null 2>&1
 }
 
 # check if the first argument passed in looks like a flag
-if [ "$(printf %c "$1")" = '-' ]; then
+if [ "${1#-}" != "$1" ]; then
   set -- /sbin/tini -- composer "$@"
 # check if the first argument passed in is composer
 elif [ "$1" = 'composer' ]; then
