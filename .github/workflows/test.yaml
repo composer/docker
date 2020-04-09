@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+
+  build-and-test:
+
+    name: Build and Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build
+      run: make build
+
+    - name: Test
+      run: make test
