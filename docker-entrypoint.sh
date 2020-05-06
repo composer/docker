@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 isCommand() {
   # Retain backwards compatibility with common CI providers,
   # see: https://github.com/composer/docker/issues/107
-  if [ "$1" == "sh" ]; then
+  if [ "$1" = "sh" ]; then
     return 1
   fi
 

@@ -2,13 +2,10 @@ FROM php:7-alpine
 
 RUN set -eux; \
   apk add --no-cache --virtual .composer-rundeps \
-    bash \
-    coreutils \
     git \
     make \
     mercurial \
     openssh-client \
-    patch \
     subversion \
     tini \
     unzip \
@@ -59,6 +56,6 @@ COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 WORKDIR /app
 
-ENTRYPOINT ["/bin/sh", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["composer"]
