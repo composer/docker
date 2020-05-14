@@ -7,7 +7,7 @@ isCommand() {
     return 1
   fi
 
-  composer help $1 > /dev/null 2>&1
+  composer help "$1" > /dev/null 2>&1
 }
 
 # check if the first argument passed in looks like a flag
