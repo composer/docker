@@ -1,9 +1,12 @@
-name: Test
+name: Docker
 
 on:
   push:
     branches:
     - master
+    paths:
+    - .github/workflows/docker.yaml
+    - **/Dockerfile
 
 jobs:
 
