@@ -20,5 +20,5 @@ jobs:
 
     - name: ShellCheck
       run: >
-        find $PWD -type f \( -name '*.sh' -not -name 'generate-stackbrew-library.sh' \)
+        find . -type f \( -name '*.sh' -not -name 'generate-stackbrew-library.sh' \)
         | xargs --no-run-if-empty shellcheck
