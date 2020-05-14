@@ -3,7 +3,7 @@ name: ShellCheck
 on:
   push:
     paths:
-    - '.github/workflows/shellcheck.yaml'
+    - .github/workflows/shellcheck.yaml
     - '**.sh'
 
 jobs:
