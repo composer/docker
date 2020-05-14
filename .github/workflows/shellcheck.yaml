@@ -1,0 +1,24 @@
+name: ShellCheck
+
+on:
+  push:
+    paths:
+    - '.github/workflows/shellcheck.yaml'
+    - '**.sh'
+
+jobs:
+
+  shellcheck:
+
+    name: ShellCheck
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: ShellCheck
+      run: >
+        find $PWD -type f \( -name '*.sh' -not -name 'generate-stackbrew-library.sh' \)
+        | xargs --no-run-if-empty shellcheck
