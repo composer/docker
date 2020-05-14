@@ -19,6 +19,4 @@ jobs:
       uses: actions/checkout@v2
 
     - name: ShellCheck
-      run: >
-        find . -type f \( -name '*.sh' -not -name 'generate-stackbrew-library.sh' \)
-        | xargs --no-run-if-empty shellcheck
+      run: find . -type f -name '*.sh' | xargs shellcheck
