@@ -57,7 +57,9 @@ join() {
 
 directories=( */ )
 directories=( "${directories[@]%/}" )
-mapfile -n directories < <(echo "${directories[*]}" | sort -rV)
+
+# sort directories descending
+IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
 
 declare -A aliases=(
 	[1.10]='1 latest'
