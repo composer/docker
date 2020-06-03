@@ -81,8 +81,8 @@ for directory in "${directories[@]}"; do
 
 	cat <<-EOE
 
-		Tags: $(join ', ' "${tags[@]}")
-		Architectures: $(join ', ' "$variantArches")
+		Tags: $(join ', ' ${tags[*]})
+		Architectures: $(join ', ' $variantArches)
 		GitCommit: $commit
 		Directory: $directory
 	EOE
