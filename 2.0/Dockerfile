@@ -40,6 +40,9 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
 ENV COMPOSER_VERSION 2.0.8
 
+ADD https://github.com/composer/composer.github.io/blob/e7f28b7200249f8e5bc912b42837d4598c74153a/snapshots.pub /tmp/keys.dev.pub
+ADD https://github.com/composer/composer.github.io/blob/e7f28b7200249f8e5bc912b42837d4598c74153a/releases.pub /tmp/keys.tags.pub
+
 RUN set -eux; \
   curl --silent --fail --location --retry 3 --output /tmp/installer.php --url https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer; \
   php -r " \
@@ -52,6 +55,7 @@ RUN set -eux; \
     }"; \
   php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION}; \
   composer --ansi --version --no-interaction; \
+  composer diagnose; \
   rm -f /tmp/installer.php; \
   find /tmp -type d -exec chmod -v 1777 {} +
 
