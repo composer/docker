@@ -38,7 +38,7 @@ memory_limit=-1\n\
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.10.19
+ENV COMPOSER_VERSION 1.10.20
 
 ADD https://github.com/composer/composer.github.io/blob/e7f28b7200249f8e5bc912b42837d4598c74153a/snapshots.pub /tmp/keys.dev.pub
 ADD https://github.com/composer/composer.github.io/blob/e7f28b7200249f8e5bc912b42837d4598c74153a/releases.pub /tmp/keys.tags.pub
