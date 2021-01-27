@@ -31,14 +31,14 @@ jobs:
       working-directory: '1.10'
 
     - name: Registry login
-      if: github.ref == 'refs/head/master'
+      if: github.ref == 'refs/heads/master'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
     - name: Push tag(s)
-      if: github.ref == 'refs/head/master'
+      if: github.ref == 'refs/heads/master'
       run: docker push composer/composer
 
   build-2_0:
@@ -64,12 +64,12 @@ jobs:
       working-directory: '2.0'
 
     - name: Registry login
-      if: github.ref == 'ref/head/master'
+      if: github.ref == 'refs/heads/master'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
     - name: Push tag(s)
-      if: github.ref == 'ref/head/master'
+      if: github.ref == 'refs/heads/master'
       run: docker push composer/composer
