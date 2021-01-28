@@ -41,17 +41,54 @@ ENV COMPOSER_HOME /tmp
 ENV COMPOSER_VERSION 1.10.20
 
 RUN set -eux; \
-  curl --silent --fail --location --retry 3 --output /tmp/keys.dev.pub --url https://raw.githubusercontent.com/composer/composer.github.io/e7f28b7200249f8e5bc912b42837d4598c74153a/snapshots.pub; \
-  curl --silent --fail --location --retry 3 --output /tmp/keys.tags.pub --url https://raw.githubusercontent.com/composer/composer.github.io/e7f28b7200249f8e5bc912b42837d4598c74153a/releases.pub; \
-  curl --silent --fail --location --retry 3 --output /tmp/installer.php --url https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer; \
+  curl \
+    --silent \
+    --fail \
+    --location \
+    --retry 3 \
+    --output /tmp/keys.dev.pub \
+    --url https://raw.githubusercontent.com/composer/composer.github.io/e7f28b7200249f8e5bc912b42837d4598c74153a/snapshots.pub \
+  ; \
+  php -r " \
+    \$signature = '4ac45767e5ec22652f0c1167cbbb8a2b0c708369153e328cad90147dafe50952'; \
+    \$hash = hash('sha256', preg_replace('{\s}', '', file_get_contents('/tmp/keys.dev.pub'))); \
+    if (!hash_equals(\$signature, \$hash)) { \
+      echo 'Integrity check failed, dev public key is either corrupt or worse.' . PHP_EOL; \
+      exit(1); \
+    }" \
+  ; \
+  curl \
+    --silent \
+    --fail \
+    --location \
+    --retry 3 \
+    --output /tmp/keys.tags.pub \
+    --url https://raw.githubusercontent.com/composer/composer.github.io/e7f28b7200249f8e5bc912b42837d4598c74153a/releases.pub \
+  ; \
+  php -r " \
+    \$signature = '57815ba27e54dc317ecc7cc5573090d087719ba68f3bb7234e5d42d084a14642'; \
+    \$hash = hash('sha256', preg_replace('{\s}', '', file_get_contents('/tmp/keys.tags.pub'))); \
+    if (!hash_equals(\$signature, \$hash)) { \
+      echo 'Integrity check failed, tags public key is either corrupt or worse.' . PHP_EOL; \
+      exit(1); \
+    }" \
+  ; \
+  curl \
+    --silent \
+    --fail \
+    --location \
+    --retry 3 \
+    --output /tmp/installer.php \
+    --url https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer \
+  ; \
   php -r " \
     \$signature = '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5'; \
     \$hash = hash('sha384', file_get_contents('/tmp/installer.php')); \
     if (!hash_equals(\$signature, \$hash)) { \
-      unlink('/tmp/installer.php'); \
       echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
       exit(1); \
-    }"; \
+    }" \
+  ; \
   php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION}; \
   composer --ansi --version --no-interaction; \
   composer diagnose; \
