@@ -41,8 +41,8 @@ ENV COMPOSER_HOME /tmp
 ENV COMPOSER_VERSION 1.10.20
 
 RUN set -eux; \
-  curl --silent --fail --location --retry 3 --output /tmp/keys.dev.pub --url https://github.com/composer/composer.github.io/blob/e7f28b7200249f8e5bc912b42837d4598c74153a/snapshots.pub; \
-  curl --silent --fail --location --retry 3 --output /tmp/keys.tags.pub --url https://github.com/composer/composer.github.io/blob/e7f28b7200249f8e5bc912b42837d4598c74153a/releases.pub; \
+  curl --silent --fail --location --retry 3 --output /tmp/keys.dev.pub --url https://raw.githubusercontent.com/composer/composer.github.io/e7f28b7200249f8e5bc912b42837d4598c74153a/snapshots.pub; \
+  curl --silent --fail --location --retry 3 --output /tmp/keys.tags.pub --url https://raw.githubusercontent.com/composer/composer.github.io/e7f28b7200249f8e5bc912b42837d4598c74153a/releases.pub; \
   curl --silent --fail --location --retry 3 --output /tmp/installer.php --url https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer; \
   php -r " \
     \$signature = '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5'; \
