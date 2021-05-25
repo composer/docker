@@ -19,7 +19,7 @@ The official image release workflow is as follows:
 - :writing_hand: pull request is merged, resulting in new release being added to [Docker Hub](https://hub.docker.com/_/composer)
 
 
-## Community Image
+## Community / Vendor Image
 
 The community image release workflow is as follows:
 
