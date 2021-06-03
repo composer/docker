@@ -44,9 +44,9 @@ jobs:
         docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
       working-directory: '1.10'
 
-  build-2_0:
+  build-2_1:
 
-    name: Build 2.0
+    name: Build 2.1
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -64,7 +64,7 @@ jobs:
         --tag composer/composer:2 \
         --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+') \
         .
-      working-directory: '2.0'
+      working-directory: '2.1'
 
     - name: Registry login
       if: github.ref == 'refs/heads/master'
@@ -79,38 +79,4 @@ jobs:
         docker push composer/composer:latest
         docker push composer/composer:2
         docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+')
-      working-directory: '2.0'
-
-
-  build-2_1:
-
-    name: Build 2.1
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Build
-      run: |
-        docker build \
-        --pull \
-        --no-cache \
-        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+[^ \n]*' Dockerfile | grep -oE '2.[0-9]+.[0-9]+[^ \n]*') \
-        .
-      working-directory: '2.1'
-
-    - name: Registry login
-      if: github.ref == 'refs/heads/master'
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-    - name: Push tag(s)
-      if: github.ref == 'refs/heads/master'
-      run: |
-        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+[^ \n]*' Dockerfile | grep -oE '2.[0-9]+.[0-9]+[^ \n]*')
       working-directory: '2.1'
