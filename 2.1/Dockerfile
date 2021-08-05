@@ -18,6 +18,7 @@ RUN set -eux; \
 
 RUN set -eux; \
   apk add --no-cache --virtual .build-deps \
+    libbz2-dev \
     libzip-dev \
     zlib-dev \
   ; \
