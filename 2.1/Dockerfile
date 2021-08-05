@@ -1,7 +1,9 @@
 FROM php:8-alpine
 
 RUN set -eux; \
+  apk upgrade --no-cache; \
   apk add --no-cache --virtual .composer-rundeps \
+    p7zip \
     bash \
     coreutils \
     git \
@@ -20,6 +22,7 @@ RUN set -eux; \
     zlib-dev \
   ; \
   docker-php-ext-install -j "$(nproc)" \
+    bz2 \
     zip \
   ; \
   runDeps="$( \
