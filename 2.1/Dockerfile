@@ -16,24 +16,12 @@ RUN set -eux; \
     unzip \
     zip
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
 RUN set -eux; \
-  apk add --no-cache --virtual .build-deps \
-    libbz2-dev \
-    libzip-dev \
-    zlib-dev \
-  ; \
-  docker-php-ext-install -j "$(nproc)" \
+  install-php-extensions \
     bz2 \
-    zip \
-  ; \
-  runDeps="$( \
-    scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
-      | tr ',' '\n' \
-      | sort -u \
-      | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-    )"; \
-  apk add --no-cache --virtual .composer-phpext-rundeps $runDeps; \
-  apk del .build-deps
+    zip
 
 RUN printf "# composer php cli ini settings\n\
 date.timezone=UTC\n\
