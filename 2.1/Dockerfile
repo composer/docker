@@ -74,7 +74,7 @@ RUN set -eux; \
     --url https://raw.githubusercontent.com/composer/getcomposer.org/f24b8f860b95b52167f91bbd3e3a7bcafe043038/web/installer \
   ; \
   php -r " \
-    \$signature = '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5'; \
+    \$signature = '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3'; \
     \$hash = hash('sha384', file_get_contents('/tmp/installer.php')); \
     if (!hash_equals(\$signature, \$hash)) { \
       echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
