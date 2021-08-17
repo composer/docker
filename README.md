@@ -35,4 +35,4 @@ The "community" image release workflow is as follows:
 [official images repository]: https://github.com/docker-library/official-images/
 [release workflow]: https://github.com/composer/composer/blob/832af78e284b23a8f43914b2571fb4c48a7b108a/.github/workflows/release.yml#L81-L96
 [docker workflow]: https://github.com/composer/docker/blob/master/.github/workflows/docker.yaml
-[Amazon Public ECR]: (https://gallery.ecr.aws/u0u1j5s3/composer)
+[Amazon Public ECR]: https://gallery.ecr.aws/u0u1j5s3/composer
