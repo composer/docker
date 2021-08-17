@@ -1,4 +1,4 @@
-# Docker Hub
+# Docker Images
 
 Source behind the following images:
 
@@ -9,9 +9,9 @@ Source behind the following images:
 Docker Hub documentation can be found at https://github.com/docker-library/docs/tree/master/composer
 
 
-## Official Image
+## Official Image (Docker Hub only)
 
-The official image release workflow is as follows:
+The "official" image release workflow is as follows:
 
 - :robot: a new tag is pushed to [Composer repository]
 - :robot: [release workflow] on [Composer repository] creates an issue regarding new tag on [Docker repository]
@@ -22,7 +22,7 @@ The official image release workflow is as follows:
 
 ## Community / Vendor Image
 
-The community image release workflow is as follows:
+The "community" image release workflow is as follows:
 
 - :robot: a new tag is pushed to [Composer repository]
 - :robot: [release workflow] on [Composer repository] creates an issue regarding new tag on [Docker repository]
