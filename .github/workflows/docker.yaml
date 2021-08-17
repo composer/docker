@@ -51,9 +51,9 @@ jobs:
         registry: public.ecr.aws
         username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
         password: ${{ secrets.AWS_ECR_SECRET_KEY }}
-        env:
-          AWS_REGION: us-east-1
-          
+      env:
+        AWS_REGION: us-east-1
+
     - name: Push tag(s) to Amazon ECR
       if: github.ref == 'refs/heads/master'
       env:
