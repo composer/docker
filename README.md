@@ -2,9 +2,9 @@
 
 Source behind the following images:
 
-- https://hub.docker.com/_/composer (official)
-- https://hub.docker.com/r/composer/composer (community)
-- https://gallery.ecr.aws/u0u1j5s3/composer (community)
+- DockerHub https://hub.docker.com/_/composer (official)
+- DockerHub https://hub.docker.com/r/composer/composer (community)
+- AWS ECR https://gallery.ecr.aws/u0u1j5s3/composer (community)
 
 Docker Hub documentation can be found at https://github.com/docker-library/docs/tree/master/composer
 
