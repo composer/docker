@@ -60,7 +60,7 @@ jobs:
     - name: Push tag(s) to Amazon ECR
       if: github.ref == 'refs/heads/master'
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: u0u1j5s3.dkr.ecr.eu-west-1.amazonaws.com
         ECR_REPOSITORY: composer
       run: |
         docker tag composer/composer:1 $ECR_REGISTRY/$ECR_REPOSITORY:1
