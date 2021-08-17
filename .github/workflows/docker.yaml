@@ -44,29 +44,25 @@ jobs:
         docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
       working-directory: '1.10'
 
-    - name: Configure AWS credentials
+    - name: Login to Public ECR
       if: github.ref == 'refs/heads/master'
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: docker/login-action@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_KEY }}
-        aws-region: eu-west-1
-
-    - name: Login to Amazon ECR
-      if: github.ref == 'refs/heads/master'
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
+        registry: public.ecr.aws
+        username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
+        password: ${{ secrets.AWS_ECR_SECRET_KEY }}
+        env:
+          AWS_REGION: us-east-1
+          
     - name: Push tag(s) to Amazon ECR
       if: github.ref == 'refs/heads/master'
       env:
-        ECR_REGISTRY: u0u1j5s3.dkr.ecr.eu-west-1.amazonaws.com
-        ECR_REPOSITORY: composer
+        ECR_REPO: ecr-public.us-east-1.amazonaws.com/u0u1j5s3/composer
       run: |
-        docker tag composer/composer:1 $ECR_REGISTRY/$ECR_REPOSITORY:1
-        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') $ECR_REGISTRY/$ECR_REPOSITORY:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:1
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
+        docker tag composer/composer:1 $ECR_REPO:1
+        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
+        docker push $ECR_REPO:1
+        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
       working-directory: '1.10'
 
   build-2_1:
