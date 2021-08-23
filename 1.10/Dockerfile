@@ -16,7 +16,16 @@ RUN set -eux; \
     unzip \
     zip
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN set -eux; \
+  curl \
+    --silent \
+    --fail \
+    --location \
+    --retry 3 \
+    --output /usr/local/bin/install-php-extensions \
+    --url https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/edf2c4d40de3b86cc1a6e1877eaede05be016389/install-php-extensions; \
+  echo 2c3e48c01d5346be2c6cdd8d6f0a754f107d1119960b3f9d7cad0cae3ac663fb3646eab890310f89aeb3066460fee712034c0f5537608996f9a9f5f413992528 /usr/local/bin/install-php-extensions | sha512sum --strict --check; \
+  chmod +x /usr/local/bin/install-php-extensions
 
 RUN set -eux; \
   install-php-extensions \
