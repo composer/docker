@@ -1,62 +1,17 @@
-name: Docker
+name: Docker - v2
 
 on:
   push:
     paths:
-    - .github/workflows/docker.yaml
-    - '**/Dockerfile'
-    - '**/docker-entrypoint.sh'
+    - .github/workflows/v2.yaml
+    - '2.1/**'
 
 env:
   AWS_REGION: us-east-1
   ECR_REPO: public.ecr.aws/u0u1j5s3/composer
 
 jobs:
-  build-1_10:
-    name: Build 1.10
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '1.10'
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build containers
-      run: |
-        docker build \
-        --pull \
-        --no-cache \
-        --tag composer/composer:1 \
-        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') \
-        .
-    - name: Login to Docker Hub
-      if: github.ref == 'refs/heads/master'
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Push tag(s) to Docker Hub
-      if: github.ref == 'refs/heads/master'
-      run: |
-        docker push composer/composer:1
-        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
-    - name: Login to Amazon Public ECR
-      if: github.ref == 'refs/heads/master'
-      uses: docker/login-action@v1
-      with:
-        registry: public.ecr.aws
-        username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
-        password: ${{ secrets.AWS_ECR_SECRET_KEY }}
-    - name: Push tag(s) to Amazon Public ECR
-      if: github.ref == 'refs/heads/master'
-      run: |
-        docker tag composer/composer:1 $ECR_REPO:1
-        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
-        docker push $ECR_REPO:1
-        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
-
-  build-2_1:
-
+  build:
     name: Build 2.1
     runs-on: ubuntu-latest
     timeout-minutes: 20
