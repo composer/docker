@@ -29,25 +29,25 @@ jobs:
         --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') \
         .
     - name: Login to Docker Hub
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Push tag(s) to Docker Hub
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       run: |
         docker push composer/composer:1
         docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
     - name: Login to Amazon Public ECR
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
       with:
         registry: public.ecr.aws
         username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
         password: ${{ secrets.AWS_ECR_SECRET_KEY }}
     - name: Push tag(s) to Amazon Public ECR
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       run: |
         docker tag composer/composer:1 $ECR_REPO:1
         docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
