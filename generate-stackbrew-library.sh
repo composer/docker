@@ -86,6 +86,7 @@ for directory in "${directories[@]}"; do
 
 		Tags: $(join ', ' ${tags[*]})
 		Architectures: $(join ', ' $variantArches)
+		GitFetch: refs/heads/main
 		GitCommit: $commit
 		Directory: $directory
 	EOE
