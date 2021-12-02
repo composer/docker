@@ -13,7 +13,7 @@ RUN set -eux ; \
     tini \
     unzip \
     zip \
-    $([ $(apk --print-arch) != "x86" ] && echo mercurial)
+    $([ "$(apk --print-arch)" != "x86" ] && echo mercurial)
 
 RUN printf "# composer php cli ini settings\n\
 date.timezone=UTC\n\
