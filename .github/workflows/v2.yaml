@@ -83,7 +83,7 @@ jobs:
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
       run: |
-        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+')
+        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+-RC[1-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+-RC[1-9]+')
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
