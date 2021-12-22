@@ -12,7 +12,7 @@ env:
 
 jobs:
   build:
-    name: Build 1.10
+    name: Build v1
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
