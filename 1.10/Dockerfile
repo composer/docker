@@ -22,7 +22,7 @@ memory_limit=-1\n\
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.10.24
+ENV COMPOSER_VERSION 1.10.25
 
 RUN set -eux ; \
   # install https://github.com/mlocati/docker-php-extension-installer
