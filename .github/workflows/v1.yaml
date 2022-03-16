@@ -12,21 +12,21 @@ env:
 
 jobs:
   build:
-    name: Build v1
+    name: Build v1.10
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
       run:
         working-directory: '1.10'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build
       run: |
         docker build \
         --pull \
         --no-cache \
         --tag composer/composer:1 \
-        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') \
+        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.10.[\d]+' Dockerfile | grep -oE '1.10.[\d]+') \
         .
     - name: Login to Docker Hub
       if: github.ref == 'refs/heads/main'
@@ -38,7 +38,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         docker push composer/composer:1
-        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
+        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 1.10.[\d]+' Dockerfile | grep -oE '1.10.[\d]+')
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
@@ -50,6 +50,6 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         docker tag composer/composer:1 $ECR_REPO:1
-        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
+        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 1.10.[\d]+' Dockerfile | grep -oE '1.10.[\d]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.10.[\d]+' Dockerfile | grep -oE '1.10.[\d]+')
         docker push $ECR_REPO:1
-        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.[0-9]+.[0-9]+' Dockerfile | grep -oE '1.[0-9]+.[0-9]+')
+        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 1.10.[\d]+' Dockerfile | grep -oE '1.10.[\d]+')

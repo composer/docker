@@ -5,6 +5,7 @@ on:
     paths:
     - .github/workflows/v2.yaml
     - '2.2/**'
+    - '2.3/**'
 
 env:
   AWS_REGION: us-east-1
@@ -12,14 +13,14 @@ env:
 
 jobs:
   build:
-    name: Build v2
+    name: Build v2.2
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
       run:
         working-directory: '2.2'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build
       run: |
         docker build \
@@ -27,7 +28,7 @@ jobs:
         --no-cache \
         --tag composer/composer:latest \
         --tag composer/composer:2 \
-        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+') \
+        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.2.[\d]+' Dockerfile | grep -oE '2.2.[\d]+') \
         .
     - name: Login to Docker Hub
       if: github.ref == 'refs/heads/main'
@@ -40,7 +41,7 @@ jobs:
       run: |
         docker push composer/composer:latest
         docker push composer/composer:2
-        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+')
+        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.2.[\d]+' Dockerfile | grep -oE '2.2.[\d]+')
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
@@ -53,7 +54,53 @@ jobs:
       run: |
         docker tag composer/composer:latest $ECR_REPO:latest
         docker tag composer/composer:2 $ECR_REPO:2
-        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+')
+        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.2.[\d]+' Dockerfile | grep -oE '2.2.[\d]+') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.2.[\d]+' Dockerfile | grep -oE '2.2.[\d]+')
         docker push $ECR_REPO:latest
         docker push $ECR_REPO:2
-        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.[0-9]+.[0-9]+' Dockerfile | grep -oE '2.[0-9]+.[0-9]+')
+        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.2.[\d]+' Dockerfile | grep -oE '2.2.[\d]+')
+
+    name: Build v2.3 RC
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: '2.3'
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: |
+        docker build \
+        --pull \
+        --no-cache \
+        --tag composer/composer:latest \
+        --tag composer/composer:2 \
+        --tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.3.[\d]+(-RC[\d])?' Dockerfile | grep -oE '2.3.[\d]+(-RC[\d])?') \
+        .
+    - name: Login to Docker Hub
+      if: github.ref == 'refs/heads/main'
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: Push tag(s) to Docker Hub
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker push composer/composer:latest
+        docker push composer/composer:2
+        docker push composer/composer:$(grep -oE 'COMPOSER_VERSION 2.3.[\d]+(-RC[\d])?' Dockerfile | grep -oE '2.3.[\d]+(-RC[\d])?')
+    - name: Login to Amazon Public ECR
+      if: github.ref == 'refs/heads/main'
+      uses: docker/login-action@v1
+      with:
+        registry: public.ecr.aws
+        username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
+        password: ${{ secrets.AWS_ECR_SECRET_KEY }}
+    - name: Push tag(s) to Amazon Public ECR
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker tag composer/composer:latest $ECR_REPO:latest
+        docker tag composer/composer:2 $ECR_REPO:2
+        docker tag composer/composer:$(grep -oE 'COMPOSER_VERSION 2.3.[\d]+(-RC[\d])?' Dockerfile | grep -oE '2.3.[\d]+(-RC[\d])?') $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.3.[\d]+(-RC[\d])?' Dockerfile | grep -oE '2.3.[\d]+(-RC[\d])?')
+        docker push $ECR_REPO:latest
+        docker push $ECR_REPO:2
+        docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.3.[\d]+(-RC[\d])?' Dockerfile | grep -oE '2.3.[\d]+(-RC[\d])?')
