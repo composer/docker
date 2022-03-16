@@ -12,7 +12,7 @@ env:
   ECR_REPO: public.ecr.aws/u0u1j5s3/composer
 
 jobs:
-  build:
+  build22:
     name: Build v2.2
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -58,7 +58,7 @@ jobs:
         docker push $ECR_REPO:latest
         docker push $ECR_REPO:2
         docker push $ECR_REPO:$(grep -oE 'COMPOSER_VERSION 2.2.[\d]+' Dockerfile | grep -oE '2.2.[\d]+')
-
+  build23:
     name: Build v2.3 RC
     runs-on: ubuntu-latest
     timeout-minutes: 20
