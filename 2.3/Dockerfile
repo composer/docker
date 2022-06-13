@@ -2,7 +2,6 @@ FROM php:8-alpine
 
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
-    p7zip \
     bash \
     coreutils \
     git \
@@ -13,7 +12,8 @@ RUN set -eux ; \
     tini \
     unzip \
     zip \
-    $([ "$(apk --print-arch)" != "x86" ] && echo mercurial)
+    $([ "$(apk --print-arch)" != "x86" ] && echo mercurial) \
+    $([ "$(apk --print-arch)" != "armhf" ] && echo p7zip)
 
 RUN printf "# composer php cli ini settings\n\
 date.timezone=UTC\n\
