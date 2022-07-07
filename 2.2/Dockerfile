@@ -1,4 +1,4 @@
-FROM php:8-alpine
+FROM php:8-alpine AS binary-with-runtime
 
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
@@ -89,3 +89,10 @@ WORKDIR /app
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["composer"]
+
+FROM scratch AS standalone-binary
+
+COPY --from=binary-with-runtime /usr/bin/composer /composer
+
+# This is defined as last target to be backward compatible with build without explicit --target option
+FROM binary-with-runtime AS default
