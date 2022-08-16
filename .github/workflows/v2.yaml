@@ -27,8 +27,6 @@ jobs:
         docker build \
         --pull \
         --no-cache \
-        --tag composer/composer:latest \
-        --tag composer/composer:2 \
         --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+') \
         .
     - name: Login to Docker Hub
@@ -40,8 +38,6 @@ jobs:
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
       run: |
-        docker push composer/composer:latest
-        docker push composer/composer:2
         docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
@@ -53,11 +49,7 @@ jobs:
     - name: Push tag(s) to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       run: |
-        docker tag composer/composer:latest $ECR_REPO:latest
-        docker tag composer/composer:2 $ECR_REPO:2
         docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')
-        docker push $ECR_REPO:latest
-        docker push $ECR_REPO:2
         docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')
   build23:
     name: Build v2.3
@@ -73,8 +65,6 @@ jobs:
         docker build \
         --pull \
         --no-cache \
-        --tag composer/composer:latest \
-        --tag composer/composer:2 \
         --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?') \
         .
     - name: Login to Docker Hub
@@ -86,8 +76,6 @@ jobs:
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
       run: |
-        docker push composer/composer:latest
-        docker push composer/composer:2
         docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?')
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
@@ -99,11 +87,7 @@ jobs:
     - name: Push tag(s) to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       run: |
-        docker tag composer/composer:latest $ECR_REPO:latest
-        docker tag composer/composer:2 $ECR_REPO:2
         docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?')
-        docker push $ECR_REPO:latest
-        docker push $ECR_REPO:2
         docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?')
   build24:
     name: Build v2.4
