@@ -65,7 +65,7 @@ jobs:
         docker build \
         --pull \
         --no-cache \
-        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?') \
+        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+') \
         .
     - name: Login to Docker Hub
       if: github.ref == 'refs/heads/main'
@@ -76,7 +76,7 @@ jobs:
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
       run: |
-        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?')
+        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
@@ -87,8 +87,8 @@ jobs:
     - name: Push tag(s) to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       run: |
-        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?')
-        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+(-RC\d)?' Dockerfile | grep -oP '2.3.\d+(-RC\d)?')
+        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')
+        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')
   build24:
     name: Build v2.4
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
           --no-cache \
           --tag composer/composer:latest \
           --tag composer/composer:2 \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+(-RC\d)?' Dockerfile | grep -oP '2.4.\d+(-RC\d)?') \
+          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+') \
           .
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
@@ -118,7 +118,7 @@ jobs:
         run: |
           docker push composer/composer:latest
           docker push composer/composer:2
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+(-RC\d)?' Dockerfile | grep -oP '2.4.\d+(-RC\d)?')
+          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')
       - name: Login to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v1
@@ -131,7 +131,7 @@ jobs:
         run: |
           docker tag composer/composer:latest $ECR_REPO:latest
           docker tag composer/composer:2 $ECR_REPO:2
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+(-RC\d)?' Dockerfile | grep -oP '2.4.\d+(-RC\d)?') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+(-RC\d)?' Dockerfile | grep -oP '2.4.\d+(-RC\d)?')
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')
           docker push $ECR_REPO:latest
           docker push $ECR_REPO:2
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+(-RC\d)?' Dockerfile | grep -oP '2.4.\d+(-RC\d)?')
+          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')
