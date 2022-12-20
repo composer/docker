@@ -63,7 +63,7 @@ IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
 
 declare -A aliases=(
 	[1.10]='1'
-	[2.4]='2 latest'
+	[2.5]='2 latest'
 )
 
 # manifest header
