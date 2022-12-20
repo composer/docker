@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
+
+declare -A aliases=(
+	[1.10]='1'
+	[2.5]='2 latest'
+)
 
 self="$(basename "${BASH_SOURCE[0]}")"
 
@@ -36,7 +42,7 @@ getArches() {
 
 	eval "declare -g -A parentRepoToArches=( $(
 		find . -name 'Dockerfile' -exec awk '
-				toupper($1) == "FROM" && $2 !~ /^('"$repo"'|scratch|microsoft\/[^:]+)(:|$)/ {
+				toupper($1) == "FROM" && $2 !~ /^('"$repo"'|scratch|binary-with-runtime)(:|$)/ {
 					print "'"$officialImagesUrl"'" $2
 				}
 			' '{}' + \
@@ -46,13 +52,14 @@ getArches() {
 }
 
 declare parentRepoToArches
+
 getArches 'composer'
 
 # prints "$2$1$3$1...$N"
 join() {
 	local sep="$1"; shift
 	local out; printf -v out "${sep//%/%%}%s" "$@"
-	echo "${out#$sep}"
+	echo "${out#"$sep"}"
 }
 
 directories=( */ )
@@ -60,11 +67,6 @@ directories=( "${directories[@]%/}" )
 
 # sort directories descending
 IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
-
-declare -A aliases=(
-	[1.10]='1'
-	[2.5]='2 latest'
-)
 
 # manifest header
 cat <<-EOH
@@ -79,13 +81,13 @@ for directory in "${directories[@]}"; do
 	commit="$(dirCommit "$directory")"
 	version="$(extractVersion "$commit" "$directory")"
 	tags=("$version" "$directory" "${aliases[$directory]:-}")
-	variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$directory/Dockerfile")"
-	variantArches="${parentRepoToArches[$variantParent]}"
+	parent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$directory/Dockerfile")"
+	arches="${parentRepoToArches[$parent]}"
 
 	cat <<-EOE
 
 		Tags: $(join ', ' ${tags[*]})
-		Architectures: $(join ', ' $variantArches)
+		Architectures: $(join ', ' $arches)
 		GitFetch: refs/heads/main
 		GitCommit: $commit
 		Directory: $directory
