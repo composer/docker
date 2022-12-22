@@ -75,6 +75,7 @@ cat <<-EOH
 
 Maintainers: Composer (@composer), Rob Bast (@alcohol)
 GitRepo: https://github.com/composer/docker.git
+Builder: buildkit
 EOH
 
 # image metadata for each directory found
