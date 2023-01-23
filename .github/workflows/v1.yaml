@@ -28,6 +28,7 @@ jobs:
         --no-cache \
         --target binary-with-runtime \
         --tag composer/composer:1 \
+        --tag composer/composer:1.10 \
         --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') \
         .
     # Build low-size image with binary only
@@ -38,6 +39,7 @@ jobs:
         --no-cache \
         --target standalone-binary \
         --tag composer/composer:1-bin \
+        --tag composer/composer:1.10-bin \
         --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin \
         .
     - name: Login to Docker Hub
@@ -50,8 +52,10 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         docker push composer/composer:1
-        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
         docker push composer/composer:1-bin
+        docker push composer/composer:1.10
+        docker push composer/composer:1.10-bin
+        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
         docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
@@ -64,10 +68,14 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         docker tag composer/composer:1 $ECR_REPO:1
-        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
         docker tag composer/composer:1-bin $ECR_REPO:1-bin
+        docker tag composer/composer:1.10 $ECR_REPO:1.10
+        docker tag composer/composer:1.10-bin $ECR_REPO:1.10-bin
+        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
         docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
         docker push $ECR_REPO:1
-        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
         docker push $ECR_REPO:1-bin
+        docker push $ECR_REPO:1.10
+        docker push $ECR_REPO:1.10-bin
+        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
         docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
