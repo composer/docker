@@ -4,6 +4,7 @@ Source behind the following images:
 
 - DockerHub https://hub.docker.com/_/composer (official)
 - DockerHub https://hub.docker.com/r/composer/composer (community)
+- DockerHub Binary-only images https://hub.docker.com/r/composer/composer (community, see `-bin` suffixed tags, [read more about it](https://blog.codito.dev/2022/11/composer-binary-only-docker-images/))
 - AWS ECR https://gallery.ecr.aws/composer/composer (community)
 
 Docker Hub documentation can be found at https://github.com/docker-library/docs/tree/master/composer
