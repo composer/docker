@@ -11,36 +11,39 @@ env:
   ECR_REPO: public.ecr.aws/u0u1j5s3/composer
 
 jobs:
-  build22:
-    name: Build v2.2
+  build-lts:
+    name: Build LTS version
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '2.2'
+    strategy:
+      matrix:
+        version:
+          - "2.2"
     steps:
     - uses: actions/checkout@v3
     # Build full image: binary with runtime
     - name: Build full image
+      working-directory: ${{ matrix.version }}
       run: |
         docker build \
         --pull \
         --no-cache \
         --target binary-with-runtime \
         --tag composer/composer:lts \
-        --tag composer/composer:2.2 \
-        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+') \
+        --tag composer/composer:${{ matrix.version }} \
+        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') \
         .
     # Build low-size image with binary only
     - name: Build binary-only image
+      working-directory: ${{ matrix.version }}
       run: |
         docker build \
         --pull \
         --no-cache \
         --target standalone-binary \
         --tag composer/composer:lts-bin \
-        --tag composer/composer:2.2-bin \
-        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')-bin \
+        --tag composer/composer:${{ matrix.version }}-bin \
+        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin \
         .
     - name: Login to Docker Hub
       if: github.ref == 'refs/heads/main'
@@ -53,10 +56,10 @@ jobs:
       run: |
         docker push composer/composer:lts
         docker push composer/composer:lts-bin
-        docker push composer/composer:2.2
-        docker push composer/composer:2.2-bin
-        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')
-        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')-bin
+        docker push composer/composer:${{ matrix.version }}
+        docker push composer/composer:${{ matrix.version }}-bin
+        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
@@ -69,44 +72,51 @@ jobs:
       run: |
         docker tag composer/composer:lts $ECR_REPO:lts
         docker tag composer/composer:lts-bin $ECR_REPO:lts-bin
-        docker tag composer/composer:2.2 $ECR_REPO:2.2
-        docker tag composer/composer:2.2-bin $ECR_REPO:2.2-bin
-        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')
-        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')-bin $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')-bin
+        docker tag composer/composer:${{ matrix.version }} $ECR_REPO:${{ matrix.version }}
+        docker tag composer/composer:${{ matrix.version }}-bin $ECR_REPO:${{ matrix.version }}-bin
+        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
         docker push $ECR_REPO:lts
         docker push $ECR_REPO:lts-bin
-        docker push $ECR_REPO:2.2
-        docker push $ECR_REPO:2.2-bin
-        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')
-        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.2.\d+' Dockerfile | grep -oP '2.2.\d+')-bin
-  build23:
-    name: Build v2.3
+        docker push $ECR_REPO:${{ matrix.version }}
+        docker push $ECR_REPO:${{ matrix.version }}-bin
+        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+
+  build-previous:
+    name: Build previous versions
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '2.3'
+    strategy:
+      matrix:
+        version:
+          - "2.3"
+          - "2.4"
+          - "2.5"
+          - "2.6"
     steps:
     - uses: actions/checkout@v3
     # Build full image: binary with runtime
     - name: Build full image
+      working-directory: ${{ matrix.version }}
       run: |
         docker build \
         --pull \
         --no-cache \
         --target binary-with-runtime \
-        --tag composer/composer:2.3 \
-        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+') \
+        --tag composer/composer:${{ matrix.version }} \
+        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') \
         .
     # Build low-size image with binary only
     - name: Build binary-only image
+      working-directory: ${{ matrix.version }}
       run: |
         docker build \
         --pull \
         --no-cache \
         --target standalone-binary \
-        --tag composer/composer:2.3-bin \
-        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')-bin \
+        --tag composer/composer:${{ matrix.version }}-bin \
+        --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin \
         .
     - name: Login to Docker Hub
       if: github.ref == 'refs/heads/main'
@@ -117,10 +127,10 @@ jobs:
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
       run: |
-        docker push composer/composer:2.3
-        docker push composer/composer:2.3-bin
-        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')
-        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')-bin
+        docker push composer/composer:${{ matrix.version }}
+        docker push composer/composer:${{ matrix.version }}-bin
+        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+        docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
     - name: Login to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       uses: docker/login-action@v1
@@ -131,145 +141,28 @@ jobs:
     - name: Push tag(s) to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
       run: |
-        docker tag composer/composer:2.3 $ECR_REPO:2.3
-        docker tag composer/composer:2.3-bin $ECR_REPO:2.3-bin
-        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')
-        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')-bin
-        docker push $ECR_REPO:2.3
-        docker push $ECR_REPO:2.3-bin
-        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')
-        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.3.\d+' Dockerfile | grep -oP '2.3.\d+')-bin
-  build24:
-    name: Build v2.4
+        docker tag composer/composer:${{ matrix.version }} $ECR_REPO:${{ matrix.version }}
+        docker tag composer/composer:${{ matrix.version }}-bin $ECR_REPO:${{ matrix.version }}-bin
+        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+        docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+        docker push $ECR_REPO:${{ matrix.version }}
+        docker push $ECR_REPO:${{ matrix.version }}-bin
+        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+        docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+
+  build-latest:
+    name: Build latest version
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '2.4'
+    strategy:
+      matrix:
+        version:
+          - "2.6"
     steps:
       - uses: actions/checkout@v3
       # Build full image: binary with runtime
       - name: Build full image
-        run: |
-          docker build \
-          --pull \
-          --no-cache \
-          --target binary-with-runtime \
-          --tag composer/composer:2.4 \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+') \
-          .
-      # Build low-size image with binary only
-      - name: Build binary-only image
-        run: |
-          docker build \
-          --pull \
-          --no-cache \
-          --target standalone-binary \
-          --tag composer/composer:2.4-bin \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')-bin \
-          .
-      - name: Login to Docker Hub
-        if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Push tag(s) to Docker Hub
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker push composer/composer:2.4
-          docker push composer/composer:2.4-bin
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')-bin
-      - name: Login to Amazon Public ECR
-        if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v1
-        with:
-          registry: public.ecr.aws
-          username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
-          password: ${{ secrets.AWS_ECR_SECRET_KEY }}
-      - name: Push tag(s) to Amazon Public ECR
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker tag composer/composer:2.4 $ECR_REPO:2.4
-          docker tag composer/composer:2.4-bin $ECR_REPO:2.4-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')-bin
-          docker push $ECR_REPO:2.4
-          docker push $ECR_REPO:2.4-bin
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.4.\d+' Dockerfile | grep -oP '2.4.\d+')-bin
-  build25:
-    name: Build v2.5
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '2.5'
-    steps:
-      - uses: actions/checkout@v3
-      # Build full image: binary with runtime
-      - name: Build full image
-        run: |
-          docker build \
-          --pull \
-          --no-cache \
-          --target binary-with-runtime \
-          --tag composer/composer:2.5 \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+') \
-          .
-      # Build low-size image with binary only
-      - name: Build binary-only image
-        run: |
-          docker build \
-          --pull \
-          --no-cache \
-          --target standalone-binary \
-          --tag composer/composer:2.5-bin \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')-bin \
-          .
-      - name: Login to Docker Hub
-        if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Push tag(s) to Docker Hub
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker push composer/composer:2.5
-          docker push composer/composer:2.5-bin
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')-bin
-      - name: Login to Amazon Public ECR
-        if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v1
-        with:
-          registry: public.ecr.aws
-          username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
-          password: ${{ secrets.AWS_ECR_SECRET_KEY }}
-      - name: Push tag(s) to Amazon Public ECR
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker tag composer/composer:2.5 $ECR_REPO:2.5
-          docker tag composer/composer:2.5-bin $ECR_REPO:2.5-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')-bin
-          docker push $ECR_REPO:2.5
-          docker push $ECR_REPO:2.5-bin
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.5.\d+' Dockerfile | grep -oP '2.5.\d+')-bin
-  build26:
-    name: Build v2.6
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '2.6'
-    steps:
-      - uses: actions/checkout@v3
-      # Build full image: binary with runtime
-      - name: Build full image
+        working-directory: ${{ matrix.version }}
         run: |
           docker build \
           --pull \
@@ -277,11 +170,12 @@ jobs:
           --target binary-with-runtime \
           --tag composer/composer:latest \
           --tag composer/composer:2 \
-          --tag composer/composer:2.6 \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+') \
+          --tag composer/composer:${{ matrix.version }} \
+          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') \
           .
       # Build low-size image with binary only
       - name: Build binary-only image
+        working-directory: ${{ matrix.version }}
         run: |
           docker build \
           --pull \
@@ -289,8 +183,8 @@ jobs:
           --target standalone-binary \
           --tag composer/composer:latest-bin \
           --tag composer/composer:2-bin \
-          --tag composer/composer:2.6-bin \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')-bin \
+          --tag composer/composer:${{ matrix.version }}-bin \
+          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin \
           .
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
@@ -305,10 +199,10 @@ jobs:
           docker push composer/composer:latest-bin
           docker push composer/composer:2
           docker push composer/composer:2-bin
-          docker push composer/composer:2.6
-          docker push composer/composer:2.6-bin
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')-bin
+          docker push composer/composer:${{ matrix.version }}
+          docker push composer/composer:${{ matrix.version }}-bin
+          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
       - name: Login to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v1
@@ -323,15 +217,15 @@ jobs:
           docker tag composer/composer:latest-bin $ECR_REPO:latest-bin
           docker tag composer/composer:2 $ECR_REPO:2
           docker tag composer/composer:2-bin $ECR_REPO:2-bin
-          docker tag composer/composer:2.6 $ECR_REPO:2.6
-          docker tag composer/composer:2.6-bin $ECR_REPO:2.6-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')-bin
+          docker tag composer/composer:${{ matrix.version }} $ECR_REPO:${{ matrix.version }}
+          docker tag composer/composer:${{ matrix.version }}-bin $ECR_REPO:${{ matrix.version }}-bin
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
           docker push $ECR_REPO:latest
           docker push $ECR_REPO:latest-bin
           docker push $ECR_REPO:2
           docker push $ECR_REPO:2-bin
-          docker push $ECR_REPO:2.6
-          docker push $ECR_REPO:2.6-bin
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 2.6.\d+' Dockerfile | grep -oP '2.6.\d+')-bin
+          docker push $ECR_REPO:${{ matrix.version }}
+          docker push $ECR_REPO:${{ matrix.version }}-bin
+          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
