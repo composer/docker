@@ -53,6 +53,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
+      working-directory: ${{ matrix.version }}
       run: |
         docker push composer/composer:lts
         docker push composer/composer:lts-bin
@@ -69,6 +70,7 @@ jobs:
         password: ${{ secrets.AWS_ECR_SECRET_KEY }}
     - name: Push tag(s) to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
+      working-directory: ${{ matrix.version }}
       run: |
         docker tag composer/composer:lts $ECR_REPO:lts
         docker tag composer/composer:lts-bin $ECR_REPO:lts-bin
@@ -126,6 +128,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Push tag(s) to Docker Hub
       if: github.ref == 'refs/heads/main'
+      working-directory: ${{ matrix.version }}
       run: |
         docker push composer/composer:${{ matrix.version }}
         docker push composer/composer:${{ matrix.version }}-bin
@@ -140,6 +143,7 @@ jobs:
         password: ${{ secrets.AWS_ECR_SECRET_KEY }}
     - name: Push tag(s) to Amazon Public ECR
       if: github.ref == 'refs/heads/main'
+      working-directory: ${{ matrix.version }}
       run: |
         docker tag composer/composer:${{ matrix.version }} $ECR_REPO:${{ matrix.version }}
         docker tag composer/composer:${{ matrix.version }}-bin $ECR_REPO:${{ matrix.version }}-bin
@@ -194,6 +198,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Push tag(s) to Docker Hub
         if: github.ref == 'refs/heads/main'
+        working-directory: ${{ matrix.version }}
         run: |
           docker push composer/composer:latest
           docker push composer/composer:latest-bin
@@ -212,6 +217,7 @@ jobs:
           password: ${{ secrets.AWS_ECR_SECRET_KEY }}
       - name: Push tag(s) to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
+        working-directory: ${{ matrix.version }}
         run: |
           docker tag composer/composer:latest $ECR_REPO:latest
           docker tag composer/composer:latest-bin $ECR_REPO:latest-bin
