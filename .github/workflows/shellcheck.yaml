@@ -1,6 +1,7 @@
 name: ShellCheck
 
 on:
+  pull_request: null
   push:
     paths:
     - .github/workflows/shellcheck.yaml
