@@ -3,15 +3,15 @@ name: ShellCheck
 on:
   push:
     paths:
-    - .github/workflows/shellcheck.yaml
-    - '**.sh'
+      - .github/workflows/shellcheck.yaml
+      - '**.sh'
 
 jobs:
   shellcheck:
     name: ShellCheck
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: ShellCheck
-      run: find . -type f -name '*.sh' | grep -v generate-stackbrew-library | xargs shellcheck
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: ShellCheck
+        run: find . -type f -name '*.sh' | grep -v generate-stackbrew-library | xargs shellcheck
