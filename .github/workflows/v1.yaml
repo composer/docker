@@ -60,7 +60,7 @@ jobs:
           docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
       - name: Login to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: public.ecr.aws
           username: ${{ secrets.AWS_ECR_ACCESS_KEY }}
