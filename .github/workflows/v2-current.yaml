@@ -11,6 +11,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPO: public.ecr.aws/u0u1j5s3/composer
 
+jobs:
   build-latest:
     name: Build latest version
     runs-on: ubuntu-latest
