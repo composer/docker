@@ -1,4 +1,4 @@
-FROM php:8-alpine AS binary-with-runtime
+FROM php:8.1.18-alpine3.18 AS binary-with-runtime
 
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
