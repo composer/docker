@@ -21,7 +21,7 @@ jobs:
         version:
           - "2.2"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # Build full image: binary with runtime
       - name: Build full image
         working-directory: ${{ matrix.version }}

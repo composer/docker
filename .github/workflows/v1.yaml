@@ -20,7 +20,7 @@ jobs:
       run:
         working-directory: '1.10'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # Build full image: binary with runtime
       - name: Build full image
         run: |
