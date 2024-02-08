@@ -73,15 +73,15 @@ jobs:
         if: github.ref == 'refs/heads/main'
         working-directory: ${{ matrix.version }}
         run: |
-          docker tag composer/composer:lts $ECR_REPO:lts
-          docker tag composer/composer:lts-bin $ECR_REPO:lts-bin
-          docker tag composer/composer:${{ matrix.version }} $ECR_REPO:${{ matrix.version }}
-          docker tag composer/composer:${{ matrix.version }}-bin $ECR_REPO:${{ matrix.version }}-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
-          docker push $ECR_REPO:lts
-          docker push $ECR_REPO:lts-bin
-          docker push $ECR_REPO:${{ matrix.version }}
-          docker push $ECR_REPO:${{ matrix.version }}-bin
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+          docker tag composer/composer:lts ${{ env.ECR_REPO }}:lts
+          docker tag composer/composer:lts-bin ${{ env.ECR_REPO }}:lts-bin
+          docker tag composer/composer:${{ matrix.version }} ${{ env.ECR_REPO }}:${{ matrix.version }}
+          docker tag composer/composer:${{ matrix.version }}-bin ${{ env.ECR_REPO }}:${{ matrix.version }}-bin
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+          docker push ${{ env.ECR_REPO }}:lts
+          docker push ${{ env.ECR_REPO }}:lts-bin
+          docker push ${{ env.ECR_REPO }}:${{ matrix.version }}
+          docker push ${{ env.ECR_REPO }}:${{ matrix.version }}-bin
+          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
