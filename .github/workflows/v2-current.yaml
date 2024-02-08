@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - .github/workflows/v2-current.yaml
-      - '2.6/**'
+      - '2.7/**'
 
 env:
   AWS_REGION: us-east-1
@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         version:
-          - "2.6"
+          - "2.7"
     steps:
       - uses: actions/checkout@v3
       # Build full image: binary with runtime
