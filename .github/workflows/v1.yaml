@@ -68,15 +68,15 @@ jobs:
       - name: Push tag(s) to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
         run: |
-          docker tag composer/composer:1 $ECR_REPO:1
-          docker tag composer/composer:1-bin $ECR_REPO:1-bin
-          docker tag composer/composer:1.10 $ECR_REPO:1.10
-          docker tag composer/composer:1.10-bin $ECR_REPO:1.10-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
-          docker push $ECR_REPO:1
-          docker push $ECR_REPO:1-bin
-          docker push $ECR_REPO:1.10
-          docker push $ECR_REPO:1.10-bin
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
-          docker push $ECR_REPO:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
+          docker tag composer/composer:1 ${{ env.ECR_REPO }}:1
+          docker tag composer/composer:1-bin ${{ env.ECR_REPO }}:1-bin
+          docker tag composer/composer:1.10 ${{ env.ECR_REPO }}:1.10
+          docker tag composer/composer:1.10-bin ${{ env.ECR_REPO }}:1.10-bin
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
+          docker push ${{ env.ECR_REPO }}:1
+          docker push ${{ env.ECR_REPO }}:1-bin
+          docker push ${{ env.ECR_REPO }}:1.10
+          docker push ${{ env.ECR_REPO }}:1.10-bin
+          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
+          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
