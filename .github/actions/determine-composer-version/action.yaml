@@ -1,0 +1,25 @@
+# https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-composite-run-steps-actions
+
+name: "Determine composer version from Dockerfile"
+
+description: "Determines the composer version from a Dockerfile and exports it as COMPOSER_VERSION_MAJOR, COMPOSER_VERSION_MAJOR_MINOR, and COMPOSER_VERSION_MAJOR_MINOR_PATCH environment variables."
+
+inputs:
+  working-directory:
+    default: "."
+    description: "Which directory to use as working directory"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: "Determine composer version from Dockerfile"
+      run: |
+        echo "COMPOSER_VERSION_MAJOR=$(grep -oP 'COMPOSER_VERSION \K\d+\.\d+\.\d+' Dockerfile | cut -d '.' -f 1)" >> $GITHUB_ENV
+        echo "COMPOSER_VERSION_MAJOR_MINOR=$(grep -oP 'COMPOSER_VERSION \K\d+\.\d+\.\d+' Dockerfile | cut -d '.' -f 1,2)" >> $GITHUB_ENV
+        echo "COMPOSER_VERSION_MAJOR_MINOR_PATCH=$(grep -oP 'COMPOSER_VERSION \K\d+\.\d+\.\d+' Dockerfile)" >> $GITHUB_ENV
+      shell: "bash"
+      working-directory: "${{ inputs.working-directory }}"

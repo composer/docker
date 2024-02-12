@@ -22,6 +22,10 @@ jobs:
           - "1.10"
     steps:
       - uses: actions/checkout@v4
+      - name: "Determine composer version from Dockerfile"
+        uses: "./.github/actions/determine-composer-version"
+        with:
+          working-directory: "${{ matrix.version }}"
       # Build full image: binary with runtime
       - name: Build full image
         working-directory: ${{ matrix.version }}
@@ -30,9 +34,9 @@ jobs:
           --pull \
           --no-cache \
           --target binary-with-runtime \
-          --tag composer/composer:1 \
-          --tag composer/composer:${{ matrix.version }} \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') \
+          --tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR }} \
+          --tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR }} \
+          --tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }} \
           .
       # Build low-size image with binary only
       - name: Build binary-only image
@@ -42,9 +46,9 @@ jobs:
           --pull \
           --no-cache \
           --target standalone-binary \
-          --tag composer/composer:1-bin \
-          --tag composer/composer:${{ matrix.version }}-bin \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin \
+          --tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR }}-bin \
+          --tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}-bin \
+          --tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}-bin \
           .
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
@@ -56,12 +60,12 @@ jobs:
         if: github.ref == 'refs/heads/main'
         working-directory: ${{ matrix.version }}
         run: |
-          docker push composer/composer:1
-          docker push composer/composer:1-bin
-          docker push composer/composer:${{ matrix.version }}
-          docker push composer/composer:${{ matrix.version }}-bin
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+          docker push composer/composer:${{ env.COMPOSER_VERSION_MAJOR }}
+          docker push composer/composer:${{ env.COMPOSER_VERSION_MAJOR }}-bin
+          docker push composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}
+          docker push composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}-bin
+          docker push composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
+          docker push composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}-bin
       - name: Login to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
@@ -73,15 +77,15 @@ jobs:
         if: github.ref == 'refs/heads/main'
         working-directory: ${{ matrix.version }}
         run: |
-          docker tag composer/composer:1 ${{ env.ECR_REPO }}:1
-          docker tag composer/composer:1-bin ${{ env.ECR_REPO }}:1-bin
-          docker tag composer/composer:${{ matrix.version }} ${{ env.ECR_REPO }}:${{ matrix.version }}
-          docker tag composer/composer:${{ matrix.version }}-bin ${{ env.ECR_REPO }}:${{ matrix.version }}-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
-          docker push ${{ env.ECR_REPO }}:1
-          docker push ${{ env.ECR_REPO }}:1-bin
-          docker push ${{ env.ECR_REPO }}:${{ matrix.version }}
-          docker push ${{ env.ECR_REPO }}:${{ matrix.version }}-bin
-          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
-          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
+          docker tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR }} ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR }}
+          docker tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR }}-bin ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR }}-bin
+          docker tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR }} ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}
+          docker tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}-bin ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}-bin
+          docker tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }} ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
+          docker tag composer/composer:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}-bin ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}-bin
+          docker push ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR }}
+          docker push ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR }}-bin
+          docker push ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}
+          docker push ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR }}-bin
+          docker push ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
+          docker push ${{ env.ECR_REPO }}:${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}-bin
