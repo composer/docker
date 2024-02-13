@@ -13,35 +13,38 @@ env:
 
 jobs:
   build:
-    name: Build v1.10
+    name: Build EOL version
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: '1.10'
+    strategy:
+      matrix:
+        version:
+          - "1.10"
     steps:
       - uses: actions/checkout@v4
       # Build full image: binary with runtime
       - name: Build full image
+        working-directory: ${{ matrix.version }}
         run: |
           docker build \
           --pull \
           --no-cache \
           --target binary-with-runtime \
           --tag composer/composer:1 \
-          --tag composer/composer:1.10 \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') \
+          --tag composer/composer:${{ matrix.version }} \
+          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') \
           .
       # Build low-size image with binary only
       - name: Build binary-only image
+        working-directory: ${{ matrix.version }}
         run: |
           docker build \
           --pull \
           --no-cache \
           --target standalone-binary \
           --tag composer/composer:1-bin \
-          --tag composer/composer:1.10-bin \
-          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin \
+          --tag composer/composer:${{ matrix.version }}-bin \
+          --tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin \
           .
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
@@ -51,13 +54,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Push tag(s) to Docker Hub
         if: github.ref == 'refs/heads/main'
+        working-directory: ${{ matrix.version }}
         run: |
           docker push composer/composer:1
           docker push composer/composer:1-bin
-          docker push composer/composer:1.10
-          docker push composer/composer:1.10-bin
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
-          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
+          docker push composer/composer:${{ matrix.version }}
+          docker push composer/composer:${{ matrix.version }}-bin
+          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker push composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
       - name: Login to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
@@ -67,16 +71,17 @@ jobs:
           password: ${{ secrets.AWS_ECR_SECRET_KEY }}
       - name: Push tag(s) to Amazon Public ECR
         if: github.ref == 'refs/heads/main'
+        working-directory: ${{ matrix.version }}
         run: |
           docker tag composer/composer:1 ${{ env.ECR_REPO }}:1
           docker tag composer/composer:1-bin ${{ env.ECR_REPO }}:1-bin
-          docker tag composer/composer:1.10 ${{ env.ECR_REPO }}:1.10
-          docker tag composer/composer:1.10-bin ${{ env.ECR_REPO }}:1.10-bin
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+') ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
-          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
+          docker tag composer/composer:${{ matrix.version }} ${{ env.ECR_REPO }}:${{ matrix.version }}
+          docker tag composer/composer:${{ matrix.version }}-bin ${{ env.ECR_REPO }}:${{ matrix.version }}-bin
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+') ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker tag composer/composer:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
           docker push ${{ env.ECR_REPO }}:1
           docker push ${{ env.ECR_REPO }}:1-bin
-          docker push ${{ env.ECR_REPO }}:1.10
-          docker push ${{ env.ECR_REPO }}:1.10-bin
-          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')
-          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION 1.10.\d+' Dockerfile | grep -oP '1.10.\d+')-bin
+          docker push ${{ env.ECR_REPO }}:${{ matrix.version }}
+          docker push ${{ env.ECR_REPO }}:${{ matrix.version }}-bin
+          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')
+          docker push ${{ env.ECR_REPO }}:$(grep -oP 'COMPOSER_VERSION ${{ matrix.version }}.\d+' Dockerfile | grep -oP '${{ matrix.version }}.\d+')-bin
