@@ -1,5 +1,8 @@
 FROM php:8-alpine AS binary-with-runtime
 
+LABEL org.opencontainers.image.source="https://github.com/composer/composer" \
+      org.opencontainers.image.licenses="MIT"
+
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
     bash \
