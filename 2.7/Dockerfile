@@ -95,6 +95,9 @@ CMD ["composer"]
 
 FROM scratch AS standalone-binary
 
+LABEL org.opencontainers.image.source="https://github.com/composer/composer" \
+      org.opencontainers.image.licenses="MIT"
+
 COPY --from=binary-with-runtime /usr/bin/composer /composer
 
 # This is defined as last target to be backward compatible with build without explicit --target option
