@@ -1,8 +1,16 @@
 name: Docker - v2 previous
 
 on:
-  pull_request: null
+  pull_request:
+    paths:
+      - .github/workflows/v2-previous.yaml
+      - '2.3/**'
+      - '2.4/**'
+      - '2.5/**'
+      - '2.6/**'
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/v2-previous.yaml
       - '2.3/**'

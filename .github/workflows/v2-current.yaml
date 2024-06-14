@@ -1,8 +1,13 @@
 name: Docker - v2 current
 
 on:
-  pull_request: null
+  pull_request:
+    paths:
+      - .github/workflows/v2-current.yaml
+      - '2.7/**'
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/v2-current.yaml
       - '2.7/**'
