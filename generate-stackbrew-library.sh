@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 declare -A aliases=(
-	[1.10]='1'
-	[2.2]='lts'
-	[2.7]='2 latest'
+	[legacy]='1'
+	[lts]='lts'
+	[latest]='2 latest'
 )
 
 self="$(basename "${BASH_SOURCE[0]}")"
@@ -82,7 +82,7 @@ EOH
 for directory in "${directories[@]}"; do
 	commit="$(dirCommit "$directory")"
 	version="$(extractVersion "$commit" "$directory")"
-	tags=("$version" "$directory" "${aliases[$directory]:-}")
+	tags=("$version" "${version%.*}" "${aliases[$directory]:-}")
 	parent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$directory/Dockerfile")"
 	arches="${parentRepoToArches[$parent]}"
 

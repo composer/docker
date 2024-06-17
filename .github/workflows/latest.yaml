@@ -1,23 +1,23 @@
-name: Docker - v2 LTS
+name: Latest
 
 on:
   pull_request:
     paths:
-      - .github/workflows/v2-lts.yaml
-      - '2.2/**'
+      - .github/workflows/latest.yaml
+      - latest/**
   push:
     branches:
       - main
     paths:
-      - .github/workflows/v2-lts.yaml
-      - '2.2/**'
+      - .github/workflows/latest.yaml
+      - latest/**
 
 env:
   AWS_REGION: us-east-1
   DOCKERHUB_SLUG: composer/composer
   ECR_SLUG: public.ecr.aws/u0u1j5s3/composer
   GHCR_SLUG: ghcr.io/composer/docker
-  DIRECTORY: 2.2
+  DIRECTORY: latest
 
 jobs:
 
@@ -56,7 +56,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
-            lts
+            latest
           labels: |
             org.opencontainers.image.vendor=Composer
             org.opencontainers.image.title=Composer
@@ -76,7 +76,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
-            lts
+            latest
           labels: |
             org.opencontainers.image.vendor=Composer
             org.opencontainers.image.title=Composer
