@@ -1,6 +1,7 @@
 name: LTS (Long Term Support)
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - .github/workflows/lts.yaml
