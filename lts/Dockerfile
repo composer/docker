@@ -78,7 +78,6 @@ RUN set -eux ; \
     --version=${COMPOSER_VERSION} \
   ; \
   composer --ansi --version --no-interaction ; \
-  composer diagnose ; \
   rm -f /tmp/installer.php ; \
   find /tmp -type d -exec chmod -v 1777 {} +
 
