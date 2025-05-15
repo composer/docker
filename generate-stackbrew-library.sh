@@ -70,13 +70,13 @@ directories=( "${directories[@]%/}" )
 IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
 
 # manifest header
-cat <<-EOH
+cat <<-HEADER
 # this file was generated using https://github.com/composer/docker/blob/$(fileCommit "$self")/$self
 
 Maintainers: Composer (@composer), Rob Bast (@alcohol)
 GitRepo: https://github.com/composer/docker.git
 Builder: buildkit
-EOH
+HEADER
 
 # image metadata for each directory found
 for directory in "${directories[@]}"; do
@@ -86,12 +86,12 @@ for directory in "${directories[@]}"; do
 	parent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$directory/Dockerfile")"
 	arches="${parentRepoToArches[$parent]}"
 
-	cat <<-EOE
+	cat <<-METADATA
 
 		Tags: $(join ', ' ${tags[*]})
 		Architectures: $(join ', ' $arches)
 		GitFetch: refs/heads/main
 		GitCommit: $commit
 		Directory: $directory
-	EOE
+	METADATA
 done
