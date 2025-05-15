@@ -34,7 +34,7 @@ dirCommit() {
 
 # determine actual composer version based on COMPOSER_VERSION value
 extractVersion() {
-	git show "$1:$2/Dockerfile" | awk '$1 == "ENV" && $2 == "COMPOSER_VERSION" { print $3; exit }'
+	git show "$1:$2/Dockerfile" | grep -oP 'ENV COMPOSER_VERSION=\K\d+\.\d+\.\d+'
 }
 
 getArches() {
