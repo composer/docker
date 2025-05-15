@@ -1,0 +1,39 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "rebaseWhen": "behind-base-branch",
+    "labels": [
+        "dependencies"
+    ],
+    "extends": [
+        "config:recommended"
+    ],
+    "customManagers": [
+        {
+            "customType": "regex",
+            "fileMatch": [
+                "/latest/Dockerfile"
+            ],
+            "matchStrings": [
+                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?\\s+"
+            ],
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "composer/composer"
+        },
+        {
+            "customType": "regex",
+            "fileMatch": [
+                "lts/Dockerfile"
+            ],
+            "matchStrings": [
+                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>2\\.\\d+\\.\\d+)[\"']?\\s+"
+            ],
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "composer/composer",
+            "versioning": "semver"
+        }
+    ],
+    "baseBranches": [
+        "main",
+        "add-renovate"
+  ]
+}
