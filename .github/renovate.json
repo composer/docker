@@ -1,0 +1,65 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "rebaseWhen": "behind-base-branch",
+    "labels": [
+        "dependencies"
+    ],
+    "extends": [
+        "config:recommended"
+    ],
+    "packageRules": [
+        {
+            "matchPackageNames": [
+                "composer/composer"
+            ],
+            "enabled": true
+        },
+        {
+            "matchFileNames": [
+                "lts/Dockerfile"
+            ],
+            "matchPackageNames": [
+                "composer/composer"
+            ],
+            "versioning": "semver",
+            "commitMessageSuffix": " (LTS)",
+            "separateMinorPatch": true,
+            "additionalBranchPrefix": "lts-"
+        },
+        {
+            "matchFileNames": [
+                "latest/Dockerfile"
+            ],
+            "matchPackageNames": [
+                "composer/composer"
+            ],
+            "commitMessageSuffix": " (Latest)",
+            "separateMinorPatch": true,
+            "additionalBranchPrefix": "latest-"
+        }
+    ],
+    "customManagers": [
+        {
+            "customType": "regex",
+            "managerFilePatterns": [
+                "/latest/Dockerfile$/"
+            ],
+            "matchStrings": [
+                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?\\s+"
+            ],
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "composer/composer"
+        },
+        {
+            "customType": "regex",
+            "managerFilePatterns": [
+                "/lts/Dockerfile$/"
+            ],
+            "matchStrings": [
+                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>2\\.\\d+\\.\\d+)[\"']?\\s+"
+            ],
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "composer/composer"
+        }
+    ]
+}
