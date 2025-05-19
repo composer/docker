@@ -1,24 +1,24 @@
-name: LTS (Long Term Support)
+name: 1.10 (Legacy)
 
 on:
   workflow_dispatch:
   pull_request:
     paths:
-      - .github/workflows/lts.yaml
-      - lts/**
+      - .github/workflows/latest.yaml
+      - 1.10/**
   push:
     branches:
       - main
     paths:
-      - .github/workflows/lts.yaml
-      - lts/**
+      - .github/workflows/latest.yaml
+      - 1.10/**
 
 env:
   AWS_REGION: us-east-1
   DOCKERHUB_SLUG: composer/composer
   ECR_SLUG: public.ecr.aws/u0u1j5s3/composer
   GHCR_SLUG: ghcr.io/composer/docker
-  DIRECTORY: lts
+  DIRECTORY: 1.10
 
 jobs:
 
@@ -57,7 +57,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
-            lts
+            type=semver,pattern={{major}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
           labels: |
             org.opencontainers.image.vendor=Composer
             org.opencontainers.image.title=Composer
@@ -77,7 +77,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
-            lts
+            type=semver,pattern={{major}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
           labels: |
             org.opencontainers.image.vendor=Composer
             org.opencontainers.image.title=Composer
