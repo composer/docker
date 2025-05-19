@@ -18,7 +18,7 @@ env:
   DOCKERHUB_SLUG: composer/composer
   ECR_SLUG: public.ecr.aws/u0u1j5s3/composer
   GHCR_SLUG: ghcr.io/composer/docker
-  DIRECTORY: 1.10
+  DIRECTORY: '1.10'
 
 jobs:
 
