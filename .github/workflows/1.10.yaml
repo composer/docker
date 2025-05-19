@@ -57,7 +57,6 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
-            type=semver,pattern={{major}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
           labels: |
             org.opencontainers.image.vendor=Composer
             org.opencontainers.image.title=Composer
@@ -77,7 +76,6 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
-            type=semver,pattern={{major}},value=${{ env.COMPOSER_VERSION_MAJOR_MINOR_PATCH }}
           labels: |
             org.opencontainers.image.vendor=Composer
             org.opencontainers.image.title=Composer
