@@ -150,7 +150,7 @@ jobs:
 
       - name: Build full image
         id: build-full
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ env.DIRECTORY }}
           target: binary-with-runtime
@@ -160,7 +160,7 @@ jobs:
 
       - name: Build binary-only image
         id: build-bin
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ env.DIRECTORY }}
           target: standalone-binary
