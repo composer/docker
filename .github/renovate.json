@@ -13,7 +13,7 @@
                 "composer/composer"
             ],
             "enabled": true
-        },
+        }, 
         {
             "matchFileNames": [
                 "2.2/Dockerfile"
@@ -21,9 +21,10 @@
             "matchPackageNames": [
                 "composer/composer"
             ],
-            "versioning": "semver",
+            "matchUpdateTypes": [
+                "patch"
+            ],
             "commitMessageSuffix": " (2.2)",
-            "separateMinorPatch": true,
             "additionalBranchPrefix": "2.2-"
         },
         {
@@ -34,7 +35,6 @@
                 "composer/composer"
             ],
             "commitMessageSuffix": " (Latest)",
-            "separateMinorPatch": true,
             "additionalBranchPrefix": "latest-"
         }
     ],
@@ -56,7 +56,7 @@
                 "/2.2/Dockerfile$/"
             ],
             "matchStrings": [
-                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>2\\.2\\.\\d+)[\"']?\\s+"
+                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?\\s+"
             ],
             "datasourceTemplate": "github-releases",
             "depNameTemplate": "composer/composer"
