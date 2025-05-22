@@ -16,6 +16,21 @@
             "enabled": true
         },
         {
+            "description": "Disables major and minor updates for composer/composer in 2.2",
+            "matchFileNames": [
+                "2.2/Dockerfile"
+            ],
+            "matchPackageNames": [
+                "composer/composer"
+            ],
+            "matchUpdateTypes": [
+                "major",
+                "minor"
+            ],
+            "enabled": false
+        },
+        {
+            "description": "Enables patch updates for composer/composer in 2.2",
             "matchFileNames": [
                 "2.2/Dockerfile"
             ],
@@ -26,7 +41,8 @@
                 "patch"
             ],
             "commitMessageSuffix": " (2.2)",
-            "additionalBranchPrefix": "2.2-"
+            "additionalBranchPrefix": "2.2-",
+            "enabled": true
         },
         {
             "matchFileNames": [
