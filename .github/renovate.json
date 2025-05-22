@@ -13,7 +13,7 @@
                 "composer/composer"
             ],
             "enabled": true
-        }, 
+        },
         {
             "matchFileNames": [
                 "2.2/Dockerfile"
