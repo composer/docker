@@ -13,6 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: ShellCheck
         run: find . -type f -name '*.sh' | grep -v generate-stackbrew-library | xargs shellcheck
