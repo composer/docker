@@ -10,6 +10,12 @@
     "separateMinorPatch": true,
     "packageRules": [
         {
+          "matchPackageNames": [
+            "*"
+          ],
+          "dependencyDashboardApproval": false
+        },
+        {
             "matchPackageNames": [
                 "composer/composer"
             ],
