@@ -62,8 +62,13 @@ join() {
 	echo "${out#"$sep"}"
 }
 
-directories=( */ )
-directories=( "${directories[@]%/}" )
+exclude="1.10"
+directories=()
+
+for dir in */ ; do
+  [[ "$dir" == "$exclude/" ]] && continue
+  directories+=( "${dir%/}" )
+done
 
 # sort directories descending
 IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
