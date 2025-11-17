@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 2.2.yaml
+      - .github/workflows/2.2.yaml
       - 2.2/**
   push:
     branches:
       - main
     paths:
-      - 2.2.yaml
+      - .github/workflows/2.2.yaml
       - 2.2/**
 
 env:
