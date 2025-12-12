@@ -179,7 +179,7 @@ jobs:
           touch "/tmp/digests/bin/${digest#sha256:}"
 
       - name: Upload digests
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: digests-${{ env.PLATFORM_SLUG }}
           path: |
@@ -201,7 +201,7 @@ jobs:
     steps:
 
       - name: Download digests
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: /tmp/digests
           pattern: digests-*
