@@ -116,7 +116,7 @@ jobs:
           echo "PLATFORM_SLUG=${platform//\//-}" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: ${{ matrix.platform }}
 
