@@ -2,14 +2,11 @@ FROM php:8-alpine AS binary-with-runtime
 
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
-    7zip \
     bash \
     coreutils \
     git \
-    make \
     mercurial \
     openssh-client \
-    patch \
     subversion \
     tini \
     unzip \
