@@ -3,7 +3,6 @@ FROM php:8-alpine AS binary-with-runtime
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
     bash \
-    coreutils \
     git \
     mercurial \
     openssh-client \
@@ -22,6 +21,9 @@ ENV COMPOSER_HOME=/tmp
 ENV COMPOSER_VERSION=2.9.7
 
 RUN set -eux ; \
+  apk add --no-cache --virtual .composer-builddeps \
+    coreutils \
+  ; \
   # install public keys for snapshot and tag validation, see https://composer.github.io/pubkeys.html
   curl \
     --silent \
@@ -60,6 +62,7 @@ RUN set -eux ; \
   ; \
   composer --ansi --version --no-interaction ; \
   rm -f /tmp/installer.php ; \
+  apk del .composer-builddeps ; \
   find /tmp -type d -exec chmod -v 1777 {} +
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
