@@ -1,5 +1,6 @@
 FROM php:8-alpine AS binary-with-runtime
 
+# https://github.com/composer/composer/blob/main/README.md#binary-dependencies
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
     bash \
