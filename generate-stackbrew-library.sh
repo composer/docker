@@ -62,7 +62,7 @@ join() {
 	echo "${out#"$sep"}"
 }
 
-exclude=""
+exclude="1.10"
 directories=()
 
 for dir in */ ; do
