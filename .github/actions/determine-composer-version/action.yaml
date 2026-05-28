@@ -4,7 +4,7 @@
 
 name: "Determine composer version from Dockerfile"
 
-description: "Determines the composer version from a Dockerfile and exports it as COMPOSER_VERSION_MAJOR, COMPOSER_VERSION_MAJOR_MINOR, and COMPOSER_VERSION_MAJOR_MINOR_PATCH environment variables."
+description: "Determines the composer version from a Dockerfile and exposes it as major, major-minor, and major-minor-patch step outputs."
 
 inputs:
   working-directory:
@@ -12,14 +12,29 @@ inputs:
     description: "Which directory to use as working directory"
     required: true
 
+outputs:
+  major:
+    description: "Composer major version (e.g. 2)"
+    value: ${{ steps.determine.outputs.major }}
+  major-minor:
+    description: "Composer major.minor version (e.g. 2.8)"
+    value: ${{ steps.determine.outputs.major-minor }}
+  major-minor-patch:
+    description: "Composer major.minor.patch version (e.g. 2.8.1)"
+    value: ${{ steps.determine.outputs.major-minor-patch }}
+
 runs:
   using: "composite"
 
   steps:
     - name: "Determine composer version from Dockerfile"
+      id: determine
       run: |
-        echo "COMPOSER_VERSION_MAJOR=$(grep -oP 'ENV COMPOSER_VERSION=\K\d+\.\d+\.\d+(-RC\d+)?' Dockerfile | cut -d '.' -f 1)" >> $GITHUB_ENV
-        echo "COMPOSER_VERSION_MAJOR_MINOR=$(grep -oP 'ENV COMPOSER_VERSION=\K\d+\.\d+\.\d+(-RC\d+)?' Dockerfile | cut -d '.' -f 1,2)" >> $GITHUB_ENV
-        echo "COMPOSER_VERSION_MAJOR_MINOR_PATCH=$(grep -oP 'ENV COMPOSER_VERSION=\K\d+\.\d+\.\d+(-RC\d+)?' Dockerfile)" >> $GITHUB_ENV
+        version="$(grep -oP 'ENV COMPOSER_VERSION=\K\d+\.\d+\.\d+(-RC\d+)?' Dockerfile)"
+        {
+          echo "major=$(echo "$version" | cut -d '.' -f 1)"
+          echo "major-minor=$(echo "$version" | cut -d '.' -f 1,2)"
+          echo "major-minor-patch=$version"
+        } >> "$GITHUB_OUTPUT"
       shell: "bash"
       working-directory: "${{ inputs.working-directory }}"
