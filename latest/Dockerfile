@@ -1,15 +1,12 @@
 FROM php:8-alpine AS binary-with-runtime
 
+# https://github.com/composer/composer/blob/main/README.md#binary-dependencies
 RUN set -eux ; \
   apk add --no-cache --virtual .composer-rundeps \
-    7zip \
     bash \
-    coreutils \
     git \
-    make \
     mercurial \
     openssh-client \
-    patch \
     subversion \
     tini \
     unzip \
@@ -25,21 +22,8 @@ ENV COMPOSER_HOME=/tmp
 ENV COMPOSER_VERSION=2.10.0
 
 RUN set -eux ; \
-  # install https://github.com/mlocati/docker-php-extension-installer
-  curl \
-    --silent \
-    --fail \
-    --location \
-    --retry 3 \
-    --output /usr/local/bin/install-php-extensions \
-    --url https://github.com/mlocati/docker-php-extension-installer/releases/download/1.2.58/install-php-extensions \
-  ; \
-  echo 182011b3dca5544a70fdeb587af44ed1760aa9a2ed37d787d0f280a99f92b008e638c37762360cd85583830a097665547849cb2293c4a0ee32c2a36ef7a349e2 /usr/local/bin/install-php-extensions | sha512sum --strict --check ; \
-  chmod +x /usr/local/bin/install-php-extensions ; \
-  # install necessary/useful extensions not included in base image
-  install-php-extensions \
-    bz2 \
-    zip \
+  apk add --no-cache --virtual .composer-builddeps \
+    coreutils \
   ; \
   # install public keys for snapshot and tag validation, see https://composer.github.io/pubkeys.html
   curl \
@@ -79,6 +63,7 @@ RUN set -eux ; \
   ; \
   composer --ansi --version --no-interaction ; \
   rm -f /tmp/installer.php ; \
+  apk del .composer-builddeps ; \
   find /tmp -type d -exec chmod -v 1777 {} +
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
