@@ -32,9 +32,9 @@ RUN set -eux ; \
     --location \
     --retry 3 \
     --output /usr/local/bin/install-php-extensions \
-    --url https://github.com/mlocati/docker-php-extension-installer/releases/download/1.2.58/install-php-extensions \
+    --url https://github.com/mlocati/docker-php-extension-installer/releases/download/2.11.12/install-php-extensions \
   ; \
-  echo 182011b3dca5544a70fdeb587af44ed1760aa9a2ed37d787d0f280a99f92b008e638c37762360cd85583830a097665547849cb2293c4a0ee32c2a36ef7a349e2 /usr/local/bin/install-php-extensions | sha512sum --strict --check ; \
+  echo 0c3594c9865bf1e2372cfd3da355cf5115c56fdcc9956218e06c130d99d7754d806088d8d0771f6e84f01e93cd65928df2579d50d7d66811010552eae6fe671a /usr/local/bin/install-php-extensions | sha512sum --strict --check ; \
   chmod +x /usr/local/bin/install-php-extensions ; \
   # install necessary/useful extensions not included in base image
   install-php-extensions \
