@@ -51,7 +51,7 @@ jobs:
 
       - name: Determine Composer version from Dockerfile
         id: composer-version
-        uses: ./.github/actions/determine-composer-version
+        uses: $/.github/actions/determine-composer-version
         with:
           working-directory: ${{ env.DIRECTORY }}
 
