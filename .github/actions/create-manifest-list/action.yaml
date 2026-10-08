@@ -1,0 +1,40 @@
+# https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-composite-run-steps-actions
+
+name: "Create and push manifest lists"
+
+description: "Creates a multi-platform manifest list per image from pushed digests and tags it using docker/metadata-action JSON output."
+
+inputs:
+  metadata-json:
+    description: "JSON output of docker/metadata-action"
+    required: true
+  digests-directory:
+    description: "Directory containing one empty file per pushed digest, named after its sha256 hex"
+    required: true
+  images:
+    description: "Newline-separated list of image names to create manifest lists for"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: "Create and push manifest lists"
+      run: |
+        mapfile -t slugs <<< "$IMAGES"
+        for slug in "${slugs[@]}"; do
+          [ -n "$slug" ] || continue
+          mapfile -t tags < <(jq -r --arg slug "$slug" '.tags[] | select(startswith($slug)) | "--tag=" + .' <<< "$JSON")
+          sources=()
+          for digest in *; do
+            sources+=("$slug@sha256:$digest")
+          done
+          docker buildx imagetools create "${tags[@]}" "${sources[@]}"
+        done
+      shell: "bash"
+      working-directory: "${{ inputs.digests-directory }}"
+      env:
+        IMAGES: ${{ inputs.images }}
+        JSON: ${{ inputs.metadata-json }}
