@@ -15,8 +15,8 @@ Docker Hub documentation can be found at https://github.com/docker-library/docs/
 The "official" image release workflow is as follows:
 
 - :robot: a new tag is pushed to [Composer repository]
-- :robot: [release workflow] on [Composer repository] creates an issue regarding new tag on [Docker repository]
-- :writing_hand: modification to relevant `Dockerfile`s is pushed/merged
+- :robot: [Renovate] opens a pull request bumping the relevant `Dockerfile`s
+- :writing_hand: pull request is reviewed and merged
 - :writing_hand: a pull request is submitted to the [official images repository]
 - :writing_hand: pull request is merged, resulting in new release being added to [Docker Hub (official)]
 
@@ -26,8 +26,8 @@ The "official" image release workflow is as follows:
 The "community" image release workflow is as follows:
 
 - :robot: a new tag is pushed to [Composer repository]
-- :robot: [release workflow] on [Composer repository] creates an issue regarding new tag on [Docker repository]
-- :writing_hand: modification to relevant `Dockerfile`s is pushed/merged
+- :robot: [Renovate] opens a pull request bumping the relevant `Dockerfile`s
+- :writing_hand: pull request is reviewed and merged
 - :robot: [docker workflows] builds and pushes new release to [Docker Hub (community)]
 - :robot: [docker workflows] builds and pushes new release to [Amazon Public ECR]
 - :robot: [docker workflows] builds and pushes new release to [GHCR]
@@ -35,7 +35,7 @@ The "community" image release workflow is as follows:
 [composer repository]: https://github.com/composer/composer
 [docker repository]: https://github.com/composer/docker
 [official images repository]: https://github.com/docker-library/official-images/
-[release workflow]: https://github.com/composer/composer/blob/main/.github/workflows/release.yml
+[renovate]: https://github.com/composer/docker/blob/main/.github/renovate.json
 [docker workflows]: https://github.com/composer/docker/tree/main/.github/workflows
 [Amazon Public ECR]: https://gallery.ecr.aws/composer/composer
 [GHCR]: https://github.com/composer/docker/pkgs/container/docker
