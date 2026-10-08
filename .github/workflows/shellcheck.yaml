@@ -24,4 +24,4 @@ jobs:
         with:
           persist-credentials: false
       - name: ShellCheck
-        run: find . -type f -name '*.sh' | grep -v generate-stackbrew-library | xargs shellcheck
+        run: find . -type f -name '*.sh' -print0 | xargs -0 shellcheck

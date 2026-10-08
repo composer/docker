@@ -71,7 +71,7 @@ for dir in */ ; do
 done
 
 # sort directories descending
-IFS=$'\n'; directories=( $(echo "${directories[*]}" | sort -rV) ); unset IFS
+mapfile -t directories < <(printf '%s\n' "${directories[@]}" | sort -rV)
 
 # manifest header
 cat <<-HEADER
@@ -86,14 +86,15 @@ HEADER
 for directory in "${directories[@]}"; do
 	commit="$(dirCommit "$directory")"
 	version="$(extractVersion "$commit" "$directory")"
-	tags=("$version" "${version%.*}" "${aliases[$directory]:-}")
+	read -ra extraTags <<< "${aliases[$directory]:-}"
+	tags=("$version" "${version%.*}" "${extraTags[@]}")
 	parent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$directory/Dockerfile")"
-	arches="${parentRepoToArches[$parent]}"
+	read -ra arches <<< "${parentRepoToArches[$parent]}"
 
 	cat <<-METADATA
 
-		Tags: $(join ', ' ${tags[*]})
-		Architectures: $(join ', ' $arches)
+		Tags: $(join ', ' "${tags[@]}")
+		Architectures: $(join ', ' "${arches[@]}")
 		GitFetch: refs/heads/main
 		GitCommit: $commit
 		Directory: $directory
