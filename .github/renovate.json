@@ -1,54 +1,43 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "rebaseWhen": "behind-base-branch",
     "labels": [
         "dependencies"
     ],
     "extends": [
-        "config:recommended"
+        "config:recommended",
+        "helpers:pinGitHubActionDigests"
     ],
-    "separateMinorPatch": true,
     "packageRules": [
         {
-          "matchPackageNames": [
-            "*"
-          ],
-          "dependencyDashboardApproval": false
+            "description": "Batch action updates (each one triggers full multi-arch builds) and add a cooldown",
+            "matchManagers": [
+                "github-actions"
+            ],
+            "matchUpdateTypes": [
+                "minor",
+                "patch",
+                "digest"
+            ],
+            "groupName": "GitHub Actions",
+            "minimumReleaseAge": "7 days"
         },
         {
             "matchPackageNames": [
                 "composer/composer"
             ],
-            "enabled": true
+            "separateMinorPatch": true
         },
         {
-            "description": "Disables major and minor updates for composer/composer in 2.2",
+            "description": "2.2 is LTS: patch releases only",
             "matchFileNames": [
                 "2.2/Dockerfile"
             ],
             "matchPackageNames": [
                 "composer/composer"
             ],
-            "matchUpdateTypes": [
-                "major",
-                "minor"
-            ],
-            "enabled": false
-        },
-        {
-            "description": "Enables patch updates for composer/composer in 2.2",
-            "matchFileNames": [
-                "2.2/Dockerfile"
-            ],
-            "matchPackageNames": [
-                "composer/composer"
-            ],
-            "matchUpdateTypes": [
-                "patch"
-            ],
+            "allowedVersions": "<2.3.0",
             "commitMessageSuffix": " (2.2)",
-            "additionalBranchPrefix": "2.2-",
-            "enabled": true
+            "additionalBranchPrefix": "2.2-"
         },
         {
             "matchFileNames": [
@@ -59,27 +48,49 @@
             ],
             "commitMessageSuffix": " (Latest)",
             "additionalBranchPrefix": "latest-"
+        },
+        {
+            "description": "A new Composer major needs manual follow-up",
+            "matchFileNames": [
+                "latest/Dockerfile"
+            ],
+            "matchPackageNames": [
+                "composer/composer"
+            ],
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "prBodyNotes": [
+                "⚠️ New major: update aliases in `generate-stackbrew-library.sh` and consider creating an LTS directory for the previous major."
+            ]
+        },
+        {
+            "description": "Legacy/LTS images stay on PHP 8",
+            "matchFileNames": [
+                "1.10/Dockerfile",
+                "2.2/Dockerfile"
+            ],
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "php"
+            ],
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "enabled": false
         }
     ],
     "customManagers": [
         {
             "customType": "regex",
+            "description": "Composer version in maintained Dockerfiles (1.10 is frozen)",
             "managerFilePatterns": [
-                "/latest/Dockerfile$/"
+                "/^(latest|2\\.2)/Dockerfile$/"
             ],
             "matchStrings": [
-                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?\\s+"
-            ],
-            "datasourceTemplate": "github-releases",
-            "depNameTemplate": "composer/composer"
-        },
-        {
-            "customType": "regex",
-            "managerFilePatterns": [
-                "/2.2/Dockerfile$/"
-            ],
-            "matchStrings": [
-                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?\\s+"
+                "ENV COMPOSER_VERSION=[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+(?:-RC\\d+)?)[\"']?\\s"
             ],
             "datasourceTemplate": "github-releases",
             "depNameTemplate": "composer/composer"
