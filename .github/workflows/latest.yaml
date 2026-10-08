@@ -51,6 +51,7 @@ jobs:
 
       - name: Determine Composer version from Dockerfile
         id: composer-version
+        # "$/" = this repository at the running commit (no checkout needed), see https://github.blog/changelog/2026-07-30-reference-same-repository-actions-with-self-repository-syntax
         uses: $/.github/actions/determine-composer-version
         with:
           working-directory: ${{ env.DIRECTORY }}
@@ -176,6 +177,7 @@ jobs:
           context: ${{ env.DIRECTORY }}
           target: binary-with-runtime
           annotations: ${{ needs.prepare.outputs.full-annotations }}
+          labels: ${{ needs.prepare.outputs.full-labels }}
           platforms: ${{ matrix.platform }}
           outputs: type=image,"name=${{ env.DOCKERHUB_SLUG }},${{ env.ECR_SLUG }},${{ env.GHCR_SLUG }}",push-by-digest=true,name-canonical=true,push=${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
 
@@ -186,6 +188,7 @@ jobs:
           context: ${{ env.DIRECTORY }}
           target: standalone-binary
           annotations: ${{ needs.prepare.outputs.bin-annotations }}
+          labels: ${{ needs.prepare.outputs.bin-labels }}
           platforms: ${{ matrix.platform }}
           outputs: type=image,"name=${{ env.DOCKERHUB_SLUG }},${{ env.ECR_SLUG }},${{ env.GHCR_SLUG }}",push-by-digest=true,name-canonical=true,push=${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
 
@@ -260,21 +263,25 @@ jobs:
         env:
           JSON: ${{ needs.prepare.outputs.full-json }}
         run: |
-          docker buildx imagetools create $(jq -cr --arg slug "$DOCKERHUB_SLUG" '.tags | map(select(startswith($slug)) | "--tag " + .) | join(" ")' <<< "$JSON") \
-            $(printf "$DOCKERHUB_SLUG@sha256:%s " *)
-          docker buildx imagetools create $(jq -cr --arg slug "$ECR_SLUG" '.tags | map(select(startswith($slug)) | "--tag " + .) | join(" ")' <<< "$JSON") \
-            $(printf "$ECR_SLUG@sha256:%s " *)
-          docker buildx imagetools create $(jq -cr --arg slug "$GHCR_SLUG" '.tags | map(select(startswith($slug)) | "--tag " + .) | join(" ")' <<< "$JSON") \
-            $(printf "$GHCR_SLUG@sha256:%s " *)
+          for slug in "$DOCKERHUB_SLUG" "$ECR_SLUG" "$GHCR_SLUG"; do
+            mapfile -t tags < <(jq -r --arg slug "$slug" '.tags[] | select(startswith($slug)) | "--tag=" + .' <<< "$JSON")
+            sources=()
+            for digest in *; do
+              sources+=("$slug@sha256:$digest")
+            done
+            docker buildx imagetools create "${tags[@]}" "${sources[@]}"
+          done
 
       - name: Create manifest list for binary-only image and push
         working-directory: /tmp/digests/bin
         env:
           JSON: ${{ needs.prepare.outputs.bin-json }}
         run: |
-          docker buildx imagetools create $(jq -cr --arg slug "$DOCKERHUB_SLUG" '.tags | map(select(startswith($slug)) | "--tag " + .) | join(" ")' <<< "$JSON") \
-            $(printf "$DOCKERHUB_SLUG@sha256:%s " *)
-          docker buildx imagetools create $(jq -cr --arg slug "$ECR_SLUG" '.tags | map(select(startswith($slug)) | "--tag " + .) | join(" ")' <<< "$JSON") \
-            $(printf "$ECR_SLUG@sha256:%s " *)
-          docker buildx imagetools create $(jq -cr --arg slug "$GHCR_SLUG" '.tags | map(select(startswith($slug)) | "--tag " + .) | join(" ")' <<< "$JSON") \
-            $(printf "$GHCR_SLUG@sha256:%s " *)
+          for slug in "$DOCKERHUB_SLUG" "$ECR_SLUG" "$GHCR_SLUG"; do
+            mapfile -t tags < <(jq -r --arg slug "$slug" '.tags[] | select(startswith($slug)) | "--tag=" + .' <<< "$JSON")
+            sources=()
+            for digest in *; do
+              sources+=("$slug@sha256:$digest")
+            done
+            docker buildx imagetools create "${tags[@]}" "${sources[@]}"
+          done

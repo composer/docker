@@ -6,9 +6,11 @@ on:
             - main
         paths:
             - '.github/**.yml'
+            - '.github/**.yaml'
     pull_request:
         paths:
             - '.github/**.yml'
+            - '.github/**.yaml'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
