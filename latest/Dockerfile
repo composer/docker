@@ -22,7 +22,7 @@ memory_limit=-1\n\
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/tmp
-ENV COMPOSER_VERSION=2.11.0
+ENV COMPOSER_VERSION=2.11.1
 
 RUN set -eux ; \
   # install necessary/useful extensions not included in base image
