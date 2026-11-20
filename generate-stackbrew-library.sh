@@ -3,7 +3,6 @@ set -Eeuo pipefail
 
 declare -A aliases=(
 	[latest]='2 latest'
-	[1.10]='1'
 )
 
 self="$(basename "${BASH_SOURCE[0]}")"
@@ -62,11 +61,9 @@ join() {
 	echo "${out#"$sep"}"
 }
 
-exclude="1.10"
 directories=()
 
 for dir in */ ; do
-  [[ "$dir" == "$exclude/" ]] && continue
   directories+=( "${dir%/}" )
 done
 

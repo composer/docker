@@ -67,7 +67,6 @@
         {
             "description": "Legacy/LTS images stay on PHP 8",
             "matchFileNames": [
-                "1.10/Dockerfile",
                 "2.2/Dockerfile"
             ],
             "matchDatasources": [
@@ -85,7 +84,7 @@
     "customManagers": [
         {
             "customType": "regex",
-            "description": "Composer version in maintained Dockerfiles (1.10 is frozen)",
+            "description": "Composer version in maintained Dockerfiles",
             "managerFilePatterns": [
                 "/^(latest|2\\.2)/Dockerfile$/"
             ],
